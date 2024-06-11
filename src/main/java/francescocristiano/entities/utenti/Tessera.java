@@ -16,8 +16,7 @@ public class Tessera {
     private LocalDate dataEmissione;
     @Column(name = "data_scadenza")
     private LocalDate dataScadenza;
-    @OneToOne
-    @JoinColumn(name = "utente_id")
+    @OneToOne(mappedBy = "numeroTessera")
     private Utente utente;
     @OneToMany(mappedBy = "tessera")
     private List<Abbonamento> abbonamenti;
