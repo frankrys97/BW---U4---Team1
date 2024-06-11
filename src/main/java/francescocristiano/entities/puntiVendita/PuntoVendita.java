@@ -14,4 +14,18 @@ public abstract class PuntoVendita {
     private UUID id;
     @OneToMany(mappedBy = "puntoVendita")
     private List<TitoloDiViaggio> titoliDiViaggio;
+
+    public PuntoVendita(){}
+
+    public UUID getId() {
+        return id;
+    }
+
+    public List<TitoloDiViaggio> getTitoliDiViaggio() {
+        return titoliDiViaggio;
+    }
+
+    public void setTitoliDiViaggio(List<TitoloDiViaggio> titoliDiViaggio) {
+        this.titoliDiViaggio = titoliDiViaggio;
+    }
 }

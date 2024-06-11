@@ -17,4 +17,31 @@ public abstract class Validazione {
     private Mezzo mezzo;
     @Column(name = "data_validazione")
     private LocalDate dataValidazione;
+
+    public Validazione(){}
+
+    public Validazione(Mezzo mezzo, LocalDate dataValidazione) {
+        this.mezzo = mezzo;
+        this.dataValidazione = dataValidazione;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Mezzo getMezzo() {
+        return mezzo;
+    }
+
+    public void setMezzo(Mezzo mezzo) {
+        this.mezzo = mezzo;
+    }
+
+    public LocalDate getDataValidazione() {
+        return dataValidazione;
+    }
+
+    public void setDataValidazione(LocalDate dataValidazione) {
+        this.dataValidazione = dataValidazione;
+    }
 }
