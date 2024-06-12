@@ -15,15 +15,16 @@ public abstract class Mezzo {
     private int capienza;
     @Column(name = "in_servizio")
     private boolean inServizio;
-    @ManyToMany
-    @JoinTable(name = "mezzo_tratta", joinColumns = @JoinColumn(name = "mezzo_id"), inverseJoinColumns = @JoinColumn(name = "tratta_id"))
-    private List<Tratta> tratte;
+    /*    @ManyToMany
+        @JoinTable(name = "mezzo_tratta", joinColumns = @JoinColumn(name = "mezzo_id"), inverseJoinColumns = @JoinColumn(name = "tratta_id"))
+        private List<Tratta> tratte;*/
     @OneToMany(mappedBy = "mezzo")
     private List<Corsa> corse;
     @OneToMany(mappedBy = "mezzo")
     private List<PeriodoServizioManutenzione> periodiServiziManutenzione;
 
-    public Mezzo(){}
+    public Mezzo() {
+    }
 
     public Mezzo(int capienza, boolean inServizio) {
         this.capienza = capienza;
@@ -50,13 +51,13 @@ public abstract class Mezzo {
         this.inServizio = inServizio;
     }
 
-    public List<Tratta> getTratte() {
+/*    public List<Tratta> getTratte() {
         return tratte;
     }
 
     public void setTratte(List<Tratta> tratte) {
         this.tratte = tratte;
-    }
+    }*/
 
     public List<Corsa> getCorse() {
         return corse;
@@ -72,5 +73,14 @@ public abstract class Mezzo {
 
     public void setPeriodiServiziManutenzione(List<PeriodoServizioManutenzione> periodiServiziManutenzione) {
         this.periodiServiziManutenzione = periodiServiziManutenzione;
+    }
+
+    @Override
+    public String toString() {
+        return
+                "id=" + id +
+                        ", capienza=" + capienza +
+                        ", inServizio=" + inServizio
+                ;
     }
 }

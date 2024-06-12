@@ -6,6 +6,7 @@ import francescocristiano.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.List;
 import java.util.UUID;
 
 public class TrattaDAO {
@@ -23,8 +24,8 @@ public class TrattaDAO {
         System.out.println("La tratta da " + tratta.getZonaPartenza() + " a " + tratta.getCapolinea() + " è salvata con successo nel database!");
     }
 
-    public Tratta findById(UUID id) {
-        Tratta tratta = em.find(Tratta.class, id);
+    public Tratta findById(String id) {
+        Tratta tratta = em.find(Tratta.class, UUID.fromString(id));
         if (tratta == null) throw new NotFoundException(id);
         return tratta;
     }
@@ -40,5 +41,13 @@ public class TrattaDAO {
         transaction.commit();
     }
 
+    public List<Tratta> findAll() {
+        return em.createQuery("SELECT t FROM Tratta t", Tratta.class).getResultList();
+    }
+
+    public List<Mezzo> trovaMezziPerTratta(Tratta tratta) {
+        return em.createQuery("SELECT c.mezzo FROM Corsa c WHERE c.tratta = :tratta", Mezzo.class).setParameter("tratta", tratta)
+                .getResultList();
+    }
 
 }

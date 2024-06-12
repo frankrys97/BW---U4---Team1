@@ -28,8 +28,8 @@ public class ValidazioneDAO {
         System.out.println("Validazione salvata con successo nel database!");
     }
 
-    public Validazione findById(UUID id) {
-        Validazione validazione = em.find(Validazione.class, id);
+    public Validazione findById(String id) {
+        Validazione validazione = em.find(Validazione.class, UUID.fromString(id));
         if (validazione == null) throw new NotFoundException(id);
         return validazione;
     }

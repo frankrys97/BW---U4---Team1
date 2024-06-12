@@ -5,6 +5,7 @@ import francescocristiano.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UtenteDAO {
@@ -14,7 +15,7 @@ public class UtenteDAO {
         this.em = em;
     }
 
-    public void aggiungiUtente(Utente utente){
+    public void aggiungiUtente(Utente utente) {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         em.persist(utente);
@@ -22,9 +23,13 @@ public class UtenteDAO {
         System.out.println("L'utente " + utente.getNome() + ", " + utente.getCognome() + " salvato con successo nel database!");
     }
 
-    public Utente findById(UUID id) {
-        Utente utente = em.find(Utente.class, id);
+    public Utente findById(String id) {
+        Utente utente = em.find(Utente.class, UUID.fromString(id));
         if (utente == null) throw new NotFoundException(id);
         return utente;
+    }
+
+    public List<Utente> findAll() {
+        return em.createQuery("SELECT u FROM Utente u", Utente.class).getResultList();
     }
 }

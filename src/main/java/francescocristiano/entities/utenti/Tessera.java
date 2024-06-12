@@ -16,17 +16,18 @@ public class Tessera {
     private LocalDate dataEmissione;
     @Column(name = "data_scadenza")
     private LocalDate dataScadenza;
-    @OneToOne(mappedBy = "numeroTessera")
+    @OneToOne
+    @JoinColumn(name = "utente_id") // Chiedere a Riccardo
     private Utente utente;
     @OneToMany(mappedBy = "tessera")
     private List<Abbonamento> abbonamenti;
 
-    public Tessera(){}
+    public Tessera() {
+    }
 
-    public Tessera(LocalDate dataEmissione, Utente utente) {
+    public Tessera(LocalDate dataEmissione) {
         this.dataEmissione = dataEmissione;
         this.dataScadenza = dataEmissione.plusYears(1);
-        this.utente = utente;
     }
 
     public UUID getId() {

@@ -2,7 +2,7 @@ package francescocristiano.entities.mezzi;
 
 import jakarta.persistence.*;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -11,9 +11,9 @@ public class Corsa {
     @GeneratedValue
     private UUID id;
     @Column(name = "inizio_corsa")
-    private LocalTime inizioCorsa;
+    private LocalDateTime inizioCorsa;
     @Column(name = "fine_corsa")
-    private LocalTime fineCorsa;
+    private LocalDateTime fineCorsa;
     @ManyToOne
     @JoinColumn(name = "tratta_id")
     private Tratta tratta;
@@ -21,9 +21,10 @@ public class Corsa {
     @JoinColumn(name = "mezzo_id")
     private Mezzo mezzo;
 
-    public Corsa(){}
+    public Corsa() {
+    }
 
-    public Corsa(LocalTime inizioCorsa, LocalTime fineCorsa, Tratta tratta, Mezzo mezzo) {
+    public Corsa(LocalDateTime inizioCorsa, LocalDateTime fineCorsa, Tratta tratta, Mezzo mezzo) {
         this.inizioCorsa = inizioCorsa;
         this.fineCorsa = fineCorsa;
         this.tratta = tratta;
@@ -34,19 +35,19 @@ public class Corsa {
         return id;
     }
 
-    public LocalTime getInizioCorsa() {
+    public LocalDateTime getInizioCorsa() {
         return inizioCorsa;
     }
 
-    public void setInizioCorsa(LocalTime inizioCorsa) {
+    public void setInizioCorsa(LocalDateTime inizioCorsa) {
         this.inizioCorsa = inizioCorsa;
     }
 
-    public LocalTime getFineCorsa() {
+    public LocalDateTime getFineCorsa() {
         return fineCorsa;
     }
 
-    public void setFineCorsa(LocalTime fineCorsa) {
+    public void setFineCorsa(LocalDateTime fineCorsa) {
         this.fineCorsa = fineCorsa;
     }
 

@@ -1,6 +1,9 @@
 package francescocristiano.entities.utenti;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 import java.util.UUID;
 
@@ -11,11 +14,11 @@ public class Utente {
     private UUID id;
     private String nome;
     private String cognome;
-    @OneToOne
-    @JoinColumn(name = "numero_tessera")
+    @OneToOne(mappedBy = "utente")
     private Tessera numeroTessera;
 
-    public Utente(){}
+    public Utente() {
+    }
 
     public Utente(String nome, String cognome) {
         this.nome = nome;

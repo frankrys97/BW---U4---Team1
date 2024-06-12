@@ -8,6 +8,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public class MezzoDAO {
@@ -25,10 +26,15 @@ public class MezzoDAO {
         System.out.println("Mezzo salvato con successo nel database!");
     }
 
-    public Mezzo findById(UUID id) {
-        Mezzo mezzo = em.find(Mezzo.class, id);
+    public Mezzo findById(String id) {
+        Mezzo mezzo = em.find(Mezzo.class, UUID.fromString(id));
         if (mezzo == null) throw new NotFoundException(id);
         return mezzo;
+    }
+
+    public List<Mezzo> findAll() {
+        List<Mezzo> mezzi = em.createQuery("SELECT m FROM Mezzo m", Mezzo.class).getResultList();
+        return mezzi;
     }
 
     public void aggiungiManutenzione(Mezzo mezzo, LocalDate dataInizio, LocalDate dataFine, String descrizione) {
@@ -63,5 +69,5 @@ public class MezzoDAO {
         }
     }
 
-    
+
 }

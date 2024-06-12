@@ -35,8 +35,8 @@ public class PuntoVenditaDAO {
         System.out.println("Punto Vendita salvato con successo");
     }
 
-    public PuntoVendita findById(UUID id) {
-        PuntoVendita puntoVendita = em.find(PuntoVendita.class, id);
+    public PuntoVendita findById(String id) {
+        PuntoVendita puntoVendita = em.find(PuntoVendita.class, UUID.fromString(id));
         if (puntoVendita == null) throw new NotFoundException(id);
         return puntoVendita;
     }

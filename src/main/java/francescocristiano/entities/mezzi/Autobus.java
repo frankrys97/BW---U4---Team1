@@ -7,9 +7,15 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("autobus")
 public class Autobus extends Mezzo {
 
-    public Autobus(){}
+    public Autobus() {
+    }
 
-    public Autobus( boolean inServizio) {
+    public Autobus(boolean inServizio) {
         super(50, inServizio);
+    }
+
+    @Override
+    public String toString() {
+        return "Autobus{" + super.toString() + "}";
     }
 }

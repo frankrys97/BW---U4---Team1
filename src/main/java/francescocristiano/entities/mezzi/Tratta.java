@@ -14,9 +14,9 @@ public class Tratta {
     private String zonaPartenza;
     private String capolinea;
     @Column(name = "tempo_medio_percorrenza")
-    private int tempo_medio_percorrenza;
-    @ManyToMany(mappedBy = "tratte")
-    private List<Mezzo> mezzi;
+    private long tempo_medio_percorrenza;
+    /*  @ManyToMany(mappedBy = "tratte")
+      private List<Mezzo> mezzi;*/
     @OneToMany(mappedBy = "tratta")
     private List<Corsa> corse;
 
@@ -49,21 +49,21 @@ public class Tratta {
         this.capolinea = capolinea;
     }
 
-    public int getTempo_medio_percorrenza() {
+    public long getTempo_medio_percorrenza() {
         return tempo_medio_percorrenza;
     }
 
-    public void setTempo_medio_percorrenza(int tempo_medio_percorrenza) {
+    public void setTempo_medio_percorrenza(long tempo_medio_percorrenza) {
         this.tempo_medio_percorrenza = tempo_medio_percorrenza;
     }
 
-    public List<Mezzo> getMezzi() {
+/*    public List<Mezzo> getMezzi() {
         return mezzi;
     }
 
     public void setMezzi(List<Mezzo> mezzi) {
         this.mezzi = mezzi;
-    }
+    }*/
 
     public List<Corsa> getCorse() {
         return corse;

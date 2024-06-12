@@ -6,7 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 import java.time.Duration;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CorsaDAO {
@@ -21,19 +21,25 @@ public class CorsaDAO {
         transaction.begin();
         em.persist(corsa);
         transaction.commit();
+
         System.out.println("Corsa salvata con successo nel database!");
     }
 
     public Duration calcolaTempioMedioPercorrenza(Tratta tratta) {
-        List<Corsa> corse = tratta.getCorse();
+        List<Corsa> corse = em.createQuery("SELECT c FROM Corsa c WHERE c.tratta = :tratta", Corsa.class).setParameter("tratta", tratta).getResultList();
         if (corse.isEmpty()) {
             return Duration.ZERO;
         }
 
         long totaleMinuti = 0;
         for (Corsa corsa : corse) {
-            LocalTime inizio = corsa.getInizioCorsa();
-            LocalTime fine = corsa.getFineCorsa();
+            LocalDateTime inizio = corsa.getInizioCorsa();
+            LocalDateTime fine = corsa.getFineCorsa();
+
+            if (fine.isBefore(inizio)) {
+                fine = fine.plusDays(1);
+            }
+
             Duration durata = Duration.between(inizio, fine);
             totaleMinuti += durata.toMinutes();
         }
