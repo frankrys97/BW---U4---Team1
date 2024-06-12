@@ -20,12 +20,13 @@ public class Tratta {
     @OneToMany(mappedBy = "tratta")
     private List<Corsa> corse;
 
-    public Tratta(){}
+    public Tratta() {
+    }
 
-    public Tratta(String zonaPartenza, String capolinea, int tempo_medio_percorrenza) {
+    public Tratta(String zonaPartenza, String capolinea) {
         this.zonaPartenza = zonaPartenza;
         this.capolinea = capolinea;
-        this.tempo_medio_percorrenza = tempo_medio_percorrenza;
+        this.tempo_medio_percorrenza = 0;
     }
 
     public UUID getId() {
