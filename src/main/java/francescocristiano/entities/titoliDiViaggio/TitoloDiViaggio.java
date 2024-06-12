@@ -17,4 +17,31 @@ public abstract class TitoloDiViaggio {
     @ManyToOne
     @JoinColumn(name = "punto_vendita_id")
     private PuntoVendita puntoVendita;
+
+    public TitoloDiViaggio(){}
+
+    public TitoloDiViaggio(LocalDate dataEmissione, PuntoVendita puntoVendita) {
+        this.dataEmissione = dataEmissione;
+        this.puntoVendita = puntoVendita;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public LocalDate getDataEmissione() {
+        return dataEmissione;
+    }
+
+    public void setDataEmissione(LocalDate dataEmissione) {
+        this.dataEmissione = dataEmissione;
+    }
+
+    public PuntoVendita getPuntoVendita() {
+        return puntoVendita;
+    }
+
+    public void setPuntoVendita(PuntoVendita puntoVendita) {
+        this.puntoVendita = puntoVendita;
+    }
 }
