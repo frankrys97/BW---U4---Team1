@@ -6,29 +6,34 @@ import francescocristiano.entities.mezzi.*;
 import francescocristiano.entities.puntiVendita.DistributoreAutomatico;
 import francescocristiano.entities.puntiVendita.PuntoVendita;
 import francescocristiano.entities.puntiVendita.Rivenditore;
+import francescocristiano.entities.titoliDiViaggio.Abbonamento;
 import francescocristiano.entities.utenti.Tessera;
 import francescocristiano.entities.utenti.Utente;
 import francescocristiano.enums.AttivitaMezzo;
 import francescocristiano.enums.StatusDistributore;
+import francescocristiano.enums.TipoAbbonamento;
 import jakarta.persistence.EntityManager;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Service {
     static Scanner sc = new Scanner(System.in);
-    private EntityManager em;
-    private TrattaDAO trattaDAO;
-    private CorsaDAO corsaDAO;
-    private MezzoDAO mezzoDAO;
-    private UtenteDAO utenteDAO;
-    private TesseraDAO tesseraDAO;
-    private PeriodoServizioManutenzioneDAO periodoServizioManutenzioneDAO;
-    private PuntoVenditaDAO puntoVenditaDAO;
+    private final EntityManager em;
+    private final TrattaDAO trattaDAO;
+    private final CorsaDAO corsaDAO;
+    private final MezzoDAO mezzoDAO;
+    private final UtenteDAO utenteDAO;
+    private final TesseraDAO tesseraDAO;
+    private final PeriodoServizioManutenzioneDAO periodoServizioManutenzioneDAO;
+    private final PuntoVenditaDAO puntoVenditaDAO;
+    private final ValidazioneDAO validazioneDAO;
+    private final TitoloDiViaggioDAO titoloDiViaggioDAO;
 
     public Service(EntityManager em) {
         this.em = em;
@@ -39,6 +44,8 @@ public class Service {
         this.tesseraDAO = new TesseraDAO(em);
         this.periodoServizioManutenzioneDAO = new PeriodoServizioManutenzioneDAO(em);
         this.puntoVenditaDAO = new PuntoVenditaDAO(em);
+        this.validazioneDAO = new ValidazioneDAO(em);
+        this.titoloDiViaggioDAO = new TitoloDiViaggioDAO(em);
     }
 
 /*    public static LocalTime generaOraCasuale() {
@@ -55,9 +62,31 @@ public class Service {
         return ora.plusMinutes(minuti);
     }*/
 
+    public LocalDate generaDataCasuale() {
+        Random rand = new Random();
+        int anno = rand.nextInt(2018, 2024);
+        int mese = rand.nextInt(12) + 1;
+        int giorno = rand.nextInt(28) + 1;
+        return LocalDate.of(anno, mese, giorno);
+    }
+
+    public LocalDate generaDataCasualeSuccessiva(LocalDate dataIniziale) {
+        Random random = new Random();
+        int rangeGiorni = 365;
+        int giorniCasuali = random.nextInt(rangeGiorni) + 1;
+
+        return dataIniziale.plusDays(giorniCasuali);
+    }
+
     public void inizializzaDataBase() {
         Random rand = new Random();
         Faker faker = new Faker();
+
+        for (int i = 0; i < 15; i++) {
+            puntoVenditaDAO.aggiungiPuntoVendita(new DistributoreAutomatico(StatusDistributore.values()[rand.nextInt(StatusDistributore.values().length)]));
+            puntoVenditaDAO.aggiungiPuntoVendita(new Rivenditore(faker.company().name(), rand.nextBoolean()));
+        }
+
 
         for (int i = 0; i < 15; i++) {
             Utente utente = new Utente(faker.name().firstName(), faker.name().lastName());
@@ -65,18 +94,20 @@ public class Service {
 
             Utente utenteFromDB = utenteDAO.findById(utente.getId().toString());
 
-            Tessera tessera = new Tessera(LocalDate.now());
+            Tessera tessera = new Tessera(generaDataCasuale());
             tesseraDAO.aggiungiTessera(tessera, utenteFromDB);
+
+            Tessera tesseraFromDB = tesseraDAO.findById(tessera.getId().toString());
+
+            List<PuntoVendita> puntiVendita = puntoVenditaDAO.findAll();
+
+            Abbonamento abbonamento = new Abbonamento(generaDataCasualeSuccessiva(tesseraFromDB.getDataEmissione()), puntiVendita.get(rand.nextInt(puntiVendita.size())), TipoAbbonamento.values()[rand.nextInt(TipoAbbonamento.values().length)], tesseraFromDB);
+            titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamento);
         }
 
         for (int i = 0; i < 5; i++) {
             Utente utente = new Utente(faker.name().firstName(), faker.name().lastName());
             utenteDAO.aggiungiUtente(utente);
-        }
-
-        for (int i = 0; i < 15; i++) {
-            puntoVenditaDAO.aggiungiPuntoVendita(new DistributoreAutomatico(StatusDistributore.values()[rand.nextInt(StatusDistributore.values().length)]));
-            puntoVenditaDAO.aggiungiPuntoVendita(new Rivenditore(faker.company().name(), rand.nextBoolean()));
         }
 
         for (int i = 0; i < 20; i++) {
@@ -94,7 +125,7 @@ public class Service {
             Tratta tratta = new Tratta("Zona " + (i + 1), "Capolinea " + (i + 1));
             trattaDAO.aggiungiTratta(tratta);
 
-            List<Tratta> tratte = trattaDAO.findAll();
+            /*List<Tratta> tratte = trattaDAO.findAll();*/
             for (int j = 0; j < 10; j++) {
                 LocalDateTime oraPartenza = LocalDateTime.of(2024, rand.nextInt(12) + 1, rand.nextInt(28) + 1, rand.nextInt(24), rand.nextInt(60));
                 corsaDAO.aggiungiCorsa(new Corsa(oraPartenza, oraPartenza.plusMinutes(rand.nextInt(15, 300)), tratta, mezzi.get(rand.nextInt(mezzi.size()))));
@@ -129,7 +160,7 @@ public class Service {
                 int scelta = Integer.parseInt(sc.nextLine());
                 switch (scelta) {
                     case 1:
-                        System.out.println();
+                        menuAdmin();
                         break;
                     case 2:
                         System.out.println();
@@ -137,7 +168,7 @@ public class Service {
                     case 3:
                         System.out.println("Arrivederci");
                         resetDataBase();
-                        break;
+                        return;
                 }
             } catch (Exception e) {
                 System.out.println("Scelta non valida");
@@ -295,7 +326,7 @@ public class Service {
                         return;
                 }
             } catch (Exception e) {
-
+                System.out.println("Scelta non valida");
             }
 
         }
@@ -309,8 +340,9 @@ public class Service {
             System.out.println("2. Visualizza mezzi");
             System.out.println("3. Aggiungi tratta");
             System.out.println("4. Aggiungi corsa");
-            System.out.println("5. Aggiungi tratta ad un mezzo");
-            System.out.println("6. Torna indietro");
+            System.out.println("5. Torna indietro");
+      /*      System.out.println("5. Aggiungi tratta ad un mezzo");
+            System.out.println("6. Torna indietro");*/
             int scelta = Integer.parseInt(sc.nextLine());
             try {
                 switch (scelta) {
@@ -331,6 +363,41 @@ public class Service {
                     case 2: //Visualizza mezzi
                         menuVisualizzaMezzi();
                         break;
+                    case 3: //Aggiungi tratta
+                        System.out.println("Inserisci la zona di partenza della tratta:");
+                        String zonaPartenza = sc.nextLine();
+                        System.out.println("Inserisci la zona di arrivo della tratta:");
+                        String zonaArrivo = sc.nextLine();
+                        trattaDAO.aggiungiTratta(new Tratta(zonaPartenza, zonaArrivo));
+                        break;
+                    case 4: //Aggiungi corsa
+                        System.out.println("Inserisci l'ID del mezzo relativo alla corsa:");
+                        String idMezzo = sc.nextLine();
+                        System.out.println("Inserisci l'ID della tratta relativa alla corsa:");
+                        String idTratta = sc.nextLine();
+                        System.out.println("Inserisci la partenza della corsa (yyyy-MM-dd HH:mm:): ");
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:");
+                        LocalDateTime inizioCorsa = LocalDateTime.parse(sc.nextLine(), formatter);
+                        System.out.println("Inserisci la fine della corsa (yyyy-MM-dd HH:mm:): ");
+                        LocalDateTime fineCorsa = LocalDateTime.parse(sc.nextLine(), formatter);
+                        Mezzo mezzoTrovato = mezzoDAO.findById(idMezzo);
+                        Tratta trattaTrovata = trattaDAO.findById(idTratta);
+                        if (mezzoTrovato != null && trattaTrovata != null) {
+                            corsaDAO.aggiungiCorsa(new Corsa(inizioCorsa, fineCorsa, trattaTrovata, mezzoTrovato));
+                        } else {
+                            System.out.println("Mezzo o Tratta non trovati");
+                        }
+                        break;
+                   /* case 5:
+                        System.out.println("Inserisci l'id del mezzo a cui assegnare la tratta:");
+                        String idMezzo2 = sc.nextLine();
+                        System.out.println("Inserisci l'id della tratta da assegnare al mezzo:");
+                        String idTratta2 = sc.nextLine();
+
+                        break;*/
+                    case 5:
+                        return;
+
                 }
 
             } catch (Exception e) {
@@ -350,40 +417,86 @@ public class Service {
             System.out.println("3. Visualizza mezzi fuori servizio");
             System.out.println("4. Controlla attività mezzo");
             System.out.println("5. Controlla produttività mezzo per verificare quanti biglietti sono stati validati per un mezzo");
-            System.out.println("6. Lista corse per tratta di un  mezzo");
+            System.out.println("6. Lista corse per tratta di un mezzo");
             System.out.println("7. Torna indietro");
             int scelta = Integer.parseInt(sc.nextLine());
 
             try {
                 switch (scelta) {
                     case 1:
-                        System.out.println("Lista completa del parco mezzi:");
-                        System.out.println();
-                        mezzoDAO.findAll().forEach(System.out::println);
+                        if (mezzoDAO.findAll().isEmpty()) {
+                            System.out.println("Nessun mezzo presente");
+                        } else {
+                            System.out.println("Lista dei mezzi:");
+                            System.out.println();
+                            mezzoDAO.findAll().forEach(System.out::println);
+                        }
                         break;
                     case 2:
-                        System.out.println("Lista dei mezzi in servizio:");
-                        System.out.println();
-                        mezzoDAO.findAll().stream().filter(m -> m.isInServizio()).forEach(System.out::println);
+                        if (mezzoDAO.findAll().stream().noneMatch(Mezzo::isInServizio)) {
+                            System.out.println("Nessun mezzo in servizio");
+                        } else {
+                            System.out.println("Lista dei mezzi in servizio:");
+                            System.out.println();
+                            mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).forEach(System.out::println);
+                        }
                         break;
                     case 3:
-                        System.out.println("Lista dei mezzi fuori servizio:");
-                        System.out.println();
-                        mezzoDAO.findAll().stream().filter(m -> !m.isInServizio()).forEach(System.out::println);
+                        if (mezzoDAO.findAll().stream().filter(m -> !m.isInServizio()).count() == 0) {
+                            System.out.println("Nessun mezzo fuori servizio");
+                        } else {
+                            System.out.println("Lista dei mezzi fuori servizio:");
+                            System.out.println();
+                            mezzoDAO.findAll().stream().filter(m -> !m.isInServizio()).forEach(System.out::println);
+                        }
                         break;
                     case 4:
                         System.out.println("Inserisci l'id del mezzo:");
                         String idMezzo = sc.nextLine();
                         Mezzo mezzoTrovato = mezzoDAO.findById(idMezzo);
-                        System.out.println("Elenco dei servizi di periodo/manutenzione per il mezzo con id " + idMezzo + ":");
-                        System.out.println();
-                        periodoServizioManutenzioneDAO.trovaPeriodoServizioManutenzioneMezzo(mezzoTrovato).forEach(System.out::println);
+                        if (mezzoTrovato != null) {
+                            System.out.println("Elenco dei servizi di periodo/manutenzione per il mezzo con id " + mezzoTrovato.getId() + ":");
+                            System.out.println();
+                            periodoServizioManutenzioneDAO.trovaPeriodoServizioManutenzioneMezzo(mezzoTrovato).forEach(System.out::println);
+                        } else {
+                            System.out.println("Mezzo non trovato");
+                        }
                         break;
+                    case 5:
+                        System.out.println("Inserisci l'id del mezzo:");
+                        String idMezzo2 = sc.nextLine();
+                        Mezzo mezzoTrovato2 = mezzoDAO.findById(idMezzo2);
+                        if (mezzoTrovato2 != null) {
+                            System.out.println("Numero totale di biglietti validati per il mezzo con id: " + mezzoTrovato2.getId() + ": " + validazioneDAO.conteggioTitoliDiViaggioValidatiPerUnMezzo(mezzoTrovato2));
+                        } else {
+                            System.out.println("Mezzo non trovato");
+                        }
+                        break;
+                    case 6:
+                        System.out.println();
+                        System.out.println("Inserisci l'id del mezzo:");
+                        String idMezzo3 = sc.nextLine();
+                        System.out.println("Inserisci l'id della tratta:");
+                        String idTratta = sc.nextLine();
+
+                        Tratta trattaTrovata = trattaDAO.findById(idTratta);
+                        Mezzo mezzoTrovato3 = mezzoDAO.findById(idMezzo3);
+
+                        if (mezzoTrovato3 != null && trattaTrovata != null) {
+                            System.out.println("Numero di corse per la tratta " + trattaTrovata.getId() + " per il mezzo con id: " + mezzoTrovato3.getId() + ": " + trattaDAO.conteggioCorsePerMezzoPerTratta(trattaTrovata, mezzoTrovato3));
+                        } else {
+                            System.out.println("Mezzo o tratta non trovati");
+
+                        }
+                        break;
+                    case 7:
+                        return;
                 }
 
             } catch (Exception e) {
                 System.out.println("Scelta non valida");
             }
+
         }
 
     }
