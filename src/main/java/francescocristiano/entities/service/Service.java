@@ -388,6 +388,68 @@ public class Service {
 
     }
 
+    public void menuUtente() {
+        while (true) {
+            System.out.println("Menu Utente - Scegli un opzione");
+            System.out.println("1. Utente Nuovo");
+            System.out.println("2. Utente Registrato");
+            System.out.println("3. Torna indietro");
+            int scelta = Integer.parseInt(sc.nextLine());
+            try {
+                switch (scelta) {
+                    case 1:
+                        gestioneUtenteNuovo();
+                        break;
+                    case 2:
+                        gestioneUtenteRegistrato();
+                        break;
+                    case 3:
+                        return;
+                }
+            } catch (Exception e) {
+                System.out.println("Scelta non valida");
+            }
 
+        }
+
+    }
+    public void gestioneUtenteNuovo() {
+        while (true) {
+            System.out.println("Scegli un opzione:");
+            System.out.println("1. Acquistare un biglietto");
+            System.out.println("2. Acquistare un Abbonamento");
+            System.out.println("3. Validare Biglietto");
+            System.out.println("4. Validare Abbonamento");
+            System.out.println("5. Torna indietro");
+            int scelta = Integer.parseInt(sc.nextLine());
+            try {
+                switch (scelta) {
+                    case 1:
+                        System.out.println("Da quale punto di vendita emettere il biglietto?");
+                        System.out.println("1. Distributore Automatico");
+                        System.out.println("2. Rivenditore Autorizzato");
+                        int scelta1 = Integer.parseInt(sc.nextLine());
+                        if (scelta1 == 1) {
+                            System.out.println("Inserisci l'id del distributore automatico: ");
+                            String idDistributore = sc.nextLine();
+                            PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idDistributore);
+                            puntoVenditaDAO.emettiBiglietto(puntoVenditaTrovato);
+                        } else if (scelta1 == 2) {
+                            System.out.println("Inserisci l'id del rivenditore autorizzato: ");
+                            String idRivenditore = sc.nextLine();
+                            PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idRivenditore);
+                            puntoVenditaDAO.emettiBiglietto(puntoVenditaTrovato);
+                        }
+                        break;
+                    case 2:
+
+                        break;
+                    case 3:
+                }
+            } catch (Exception e) {
+                System.out.println("Scelta non valida");
+            }
+        }
+    }
 }
 
