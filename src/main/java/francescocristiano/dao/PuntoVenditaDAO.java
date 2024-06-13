@@ -89,6 +89,10 @@ public class PuntoVenditaDAO {
         return em.createQuery("SELECT COUNT(t) FROM TitoloDiViaggio t WHERE t.puntoVendita = :puntoVendita", Long.class).setParameter("puntoVendita", puntoVendita).getSingleResult();
     }
 
+    public List<PuntoVendita> findAll() {
+        return em.createQuery("SELECT p FROM PuntoVendita p", PuntoVendita.class).getResultList();
+    }
+
   /*  public long conteggioTitoliDiViaggioEmessiPerPuntoVendita(String id) {
         PuntoVendita puntoVendita = findById(id);
         return em.createQuery("SELECT COUNT(t) FROM TitoloDiViaggio t WHERE t.puntoVendita = :puntoVendita", Long.class).setParameter("puntoVendita", puntoVendita).getSingleResult();
