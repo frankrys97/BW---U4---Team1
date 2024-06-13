@@ -18,7 +18,13 @@ public class Tessera {
     private LocalDate dataScadenza;
     @OneToOne
     @JoinColumn(name = "utente_id") // Chiedere a Riccardo
-    private Utente utente;
+    private Utente utente; // Chiedere a Riccardo
+
+
+    /*@OneToOne(mappedBy = "tessera")
+    private Tessera tessera;*/
+
+
     @OneToMany(mappedBy = "tessera")
     private List<Abbonamento> abbonamenti;
 

@@ -17,6 +17,10 @@ public class Utente {
     @OneToOne(mappedBy = "utente")
     private Tessera numeroTessera;
 
+   /* @OneToOne
+    @JoinColumn(name = "tessera_id")
+    private Tessera tessera;*/
+
     public Utente() {
     }
 
