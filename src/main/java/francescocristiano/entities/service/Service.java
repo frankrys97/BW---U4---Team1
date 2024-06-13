@@ -3,9 +3,12 @@ package francescocristiano.entities.service;
 import com.github.javafaker.Faker;
 import francescocristiano.dao.*;
 import francescocristiano.entities.mezzi.*;
+import francescocristiano.entities.puntiVendita.DistributoreAutomatico;
+import francescocristiano.entities.puntiVendita.Rivenditore;
 import francescocristiano.entities.utenti.Tessera;
 import francescocristiano.entities.utenti.Utente;
 import francescocristiano.enums.AttivitaMezzo;
+import francescocristiano.enums.StatusDistributore;
 import jakarta.persistence.EntityManager;
 
 import java.time.Duration;
@@ -24,6 +27,7 @@ public class Service {
     private UtenteDAO utenteDAO;
     private TesseraDAO tesseraDAO;
     private PeriodoServizioManutenzioneDAO periodoServizioManutenzioneDAO;
+    private PuntoVenditaDAO puntoVenditaDAO;
 
 
     public Service(EntityManager em) {
@@ -34,6 +38,7 @@ public class Service {
         this.utenteDAO = new UtenteDAO(em);
         this.tesseraDAO = new TesseraDAO(em);
         this.periodoServizioManutenzioneDAO = new PeriodoServizioManutenzioneDAO(em);
+        this.puntoVenditaDAO = new PuntoVenditaDAO(em);
     }
 
 /*    public static LocalTime generaOraCasuale() {
@@ -62,6 +67,11 @@ public class Service {
 
             Tessera tessera = new Tessera(LocalDate.now());
             tesseraDAO.aggiungiTessera(tessera, utenteFromDB);
+        }
+
+        for (int i = 0; i < 15; i++) {
+            puntoVenditaDAO.aggiungiPuntoVendita(new DistributoreAutomatico(StatusDistributore.values()[rand.nextInt(StatusDistributore.values().length)]));
+            puntoVenditaDAO.aggiungiPuntoVendita(new Rivenditore(faker.company().name(), rand.nextBoolean()));
         }
 
 
