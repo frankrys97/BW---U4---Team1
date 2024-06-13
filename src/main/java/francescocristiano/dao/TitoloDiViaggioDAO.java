@@ -1,6 +1,5 @@
 package francescocristiano.dao;
 
-import francescocristiano.entities.puntiVendita.PuntoVendita;
 import francescocristiano.entities.titoliDiViaggio.TitoloDiViaggio;
 import francescocristiano.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
@@ -27,5 +26,13 @@ public class TitoloDiViaggioDAO {
         em.persist(titoloDiViaggio);
         transaction.commit();
         System.out.println("Titolo di viaggio salvato con successo nel database!");
+    }
+
+    public void aggiornaTitoloDiViaggio(TitoloDiViaggio titoloDiViaggio) {
+        EntityTransaction transaction = em.getTransaction();
+        transaction.begin();
+        em.merge(titoloDiViaggio);
+        transaction.commit();
+        System.out.println("Titolo di viaggio aggiornato con successo nel database!");
     }
 }
