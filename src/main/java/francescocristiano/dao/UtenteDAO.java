@@ -29,6 +29,10 @@ public class UtenteDAO {
         return utente;
     }
 
+    public List<Utente> findListaUtentiConAbbonamento() {
+        return em.createQuery("SELECT u FROM Utente u WHERE u.numeroTessera IS NOT NULL", Utente.class).getResultList();
+    }
+
     public List<Utente> findAll() {
         return em.createQuery("SELECT u FROM Utente u", Utente.class).getResultList();
     }

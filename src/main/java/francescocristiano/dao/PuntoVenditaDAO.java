@@ -14,6 +14,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 public class PuntoVenditaDAO {
@@ -94,5 +95,21 @@ public class PuntoVenditaDAO {
 
     public long conteggioTitoliDiViaggioEmessiPerDataPerPuntoVendita(LocalDate dataInizio, LocalDate dataFine, PuntoVendita puntoVendita) {
         return em.createQuery("SELECT COUNT(tv) FROM TitoloDiViaggio tv WHERE tv.dataEmissione BETWEEN :dataInizio AND :dataFine AND tv.puntoVendita = :puntoVendita", Long.class).setParameter("dataInizio", dataInizio).setParameter("dataFine", dataFine).setParameter("puntoVendita", puntoVendita).getSingleResult();
+    }
+    public List<DistributoreAutomatico> listaDistributoriAutomaticiAttivi() {
+        return em.createQuery("SELECT d FROM DistributoreAutomatico d WHERE d.stato = :stato", DistributoreAutomatico.class)
+                .setParameter("stato", StatusDistributore.ATTIVO)
+                .getResultList();
+    }
+    public List<DistributoreAutomatico> listaDistributoriAutomaticiNonAttivi() {
+        return em.createQuery("SELECT d FROM DistributoreAutomatico d WHERE d.stato = :stato", DistributoreAutomatico.class)
+                .setParameter("stato", StatusDistributore.FUORI_SERVIZIO)
+                .getResultList();
+    }
+    public List<Rivenditore> listaRivenditoriConLicenza() {
+        return em.createQuery("SELECT r FROM Rivenditore r WHERE r.licenza = true", Rivenditore.class).getResultList();
+    }
+    public List<Rivenditore> listaRivenditoriSenzaLicenza() {
+        return em.createQuery("SELECT r FROM Rivenditore r WHERE r.licenza = false", Rivenditore.class).getResultList();
     }
 }
