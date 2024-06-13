@@ -5,6 +5,7 @@ import francescocristiano.dao.*;
 import francescocristiano.entities.mezzi.*;
 import francescocristiano.entities.utenti.Tessera;
 import francescocristiano.entities.utenti.Utente;
+import francescocristiano.enums.AttivitaMezzo;
 import jakarta.persistence.EntityManager;
 
 import java.time.Duration;
@@ -22,6 +23,7 @@ public class Service {
     private MezzoDAO mezzoDAO;
     private UtenteDAO utenteDAO;
     private TesseraDAO tesseraDAO;
+    private PeriodoServizioManutenzioneDAO periodoServizioManutenzioneDAO;
 
 
     public Service(EntityManager em) {
@@ -31,6 +33,7 @@ public class Service {
         this.mezzoDAO = new MezzoDAO(em);
         this.utenteDAO = new UtenteDAO(em);
         this.tesseraDAO = new TesseraDAO(em);
+        this.periodoServizioManutenzioneDAO = new PeriodoServizioManutenzioneDAO(em);
     }
 
 /*    public static LocalTime generaOraCasuale() {
@@ -91,6 +94,15 @@ public class Service {
             tratta.setTempo_medio_percorrenza(tempoMedio.toMinutes());
             trattaDAO.aggiornaTratta(tratta);
         }
+
+        List<Mezzo> mezziFuoriServizio = mezzoDAO.findAll().stream().filter(m -> !m.isInServizio()).toList();
+        for (Mezzo mezzo : mezziFuoriServizio) {
+            LocalDate inizio = LocalDate.now().minusDays(rand.nextInt(30));
+            LocalDate fine = inizio.plusDays(rand.nextInt(30));
+            PeriodoServizioManutenzione periodo = new PeriodoServizioManutenzione(inizio, fine, AttivitaMezzo.IN_MANUTENZIONE, faker.lorem().sentence(3), mezzo);
+            periodoServizioManutenzioneDAO.aggiungiPeriodoServizioManutenzione(periodo);
+        }
+
     }
 }
 
