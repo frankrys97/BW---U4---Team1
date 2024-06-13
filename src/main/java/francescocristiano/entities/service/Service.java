@@ -61,6 +61,11 @@ public class Service {
             tesseraDAO.aggiungiTessera(tessera, utenteFromDB);
         }
 
+        for(int i = 0; i < 5; i++){
+            Utente utente = new Utente(faker.name().firstName(),faker.name().lastName());
+            utenteDAO.aggiungiUtente(utente);
+        }
+
 
         for (int i = 0; i < 20; i++) {
             mezzoDAO.aggiungiMezzo(new Tram(rand.nextBoolean()));
