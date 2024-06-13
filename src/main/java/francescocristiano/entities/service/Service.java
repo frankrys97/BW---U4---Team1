@@ -6,10 +6,12 @@ import francescocristiano.entities.mezzi.*;
 import francescocristiano.entities.puntiVendita.DistributoreAutomatico;
 import francescocristiano.entities.puntiVendita.PuntoVendita;
 import francescocristiano.entities.puntiVendita.Rivenditore;
+import francescocristiano.entities.titoliDiViaggio.Abbonamento;
 import francescocristiano.entities.utenti.Tessera;
 import francescocristiano.entities.utenti.Utente;
 import francescocristiano.enums.AttivitaMezzo;
 import francescocristiano.enums.StatusDistributore;
+import francescocristiano.enums.TipoAbbonamento;
 import jakarta.persistence.EntityManager;
 
 import java.time.Duration;
@@ -414,6 +416,14 @@ public class Service {
 
     }
     public void gestioneUtenteNuovo() {
+        System.out.println("Inserisci il tuo nome: ");
+        String nome = sc.nextLine();
+        System.out.println("Inserisci il tuo cognome:");
+        String cognome = sc.nextLine();
+        Utente nuovoUtente = new Utente(nome, cognome);
+        utenteDAO.aggiungiUtente(nuovoUtente);
+        Tessera nuovaTessera = new Tessera(LocalDate.now());
+        tesseraDAO.aggiungiTessera(nuovaTessera, nuovoUtente);
         while (true) {
             System.out.println("Scegli un opzione:");
             System.out.println("1. Acquistare un biglietto");
@@ -442,7 +452,38 @@ public class Service {
                         }
                         break;
                     case 2:
+                        System.out.println("Da quale punto di vendita emettere l'abbonamento?");
+                        System.out.println("1. Distributore Automatico");
+                        System.out.println("2. Rivenditore Autorizzato");
+                        int scelta2 = Integer.parseInt(sc.nextLine());
+                        if (scelta2 == 1) {
+                            System.out.println("Inserisci l'id del distributore automatico: ");
+                            String idDistributore = sc.nextLine();
+                            PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idDistributore);
+                            System.out.println("Selezionare il tipo di abbonamento:");
+                            System.out.println("1. Mensile");
+                            System.out.println("2. Settimanale");
+                            int scelta3 = Integer.parseInt(sc.nextLine());
+                            if (scelta3 == 1) {
+                                puntoVenditaDAO.emettiAbbonamento(puntoVenditaTrovato, nuovoUtente, TipoAbbonamento.MENSILE );
+                            } else if (scelta3 == 2) {
+                                 puntoVenditaDAO.emettiAbbonamento(puntoVenditaTrovato, nuovoUtente, TipoAbbonamento.SETTIMANALE);
+                            }
 
+                        } else if (scelta2 == 2) {
+                            System.out.println("Inserisci l'id del rivenditore autorizzato: ");
+                            String idRivenditore = sc.nextLine();
+                            PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idRivenditore);
+                            System.out.println("Selezionare il tipo di abbonamento:");
+                            System.out.println("1. Mensile");
+                            System.out.println("2. Settimanale");
+                            int scelta3 = Integer.parseInt(sc.nextLine());
+                            if (scelta3 == 1) {
+                                puntoVenditaDAO.emettiAbbonamento(puntoVenditaTrovato, nuovoUtente, TipoAbbonamento.MENSILE );
+                            } else if (scelta3 == 2) {
+                                puntoVenditaDAO.emettiAbbonamento(puntoVenditaTrovato, nuovoUtente, TipoAbbonamento.SETTIMANALE);
+                            }
+                        }
                         break;
                     case 3:
                 }
