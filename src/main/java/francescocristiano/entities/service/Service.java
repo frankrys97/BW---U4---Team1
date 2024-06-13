@@ -416,14 +416,13 @@ public class Service {
 
     }
     public void gestioneUtenteNuovo() {
+        Random rand = new Random();
         System.out.println("Inserisci il tuo nome: ");
         String nome = sc.nextLine();
         System.out.println("Inserisci il tuo cognome:");
         String cognome = sc.nextLine();
         Utente nuovoUtente = new Utente(nome, cognome);
         utenteDAO.aggiungiUtente(nuovoUtente);
-        Tessera nuovaTessera = new Tessera(LocalDate.now());
-        tesseraDAO.aggiungiTessera(nuovaTessera, nuovoUtente);
         while (true) {
             System.out.println("Scegli un opzione:");
             System.out.println("1. Acquistare un biglietto");
@@ -440,52 +439,59 @@ public class Service {
                         System.out.println("2. Rivenditore Autorizzato");
                         int scelta1 = Integer.parseInt(sc.nextLine());
                         if (scelta1 == 1) {
-                            System.out.println("Inserisci l'id del distributore automatico: ");
-                            String idDistributore = sc.nextLine();
-                            PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idDistributore);
-                            puntoVenditaDAO.emettiBiglietto(puntoVenditaTrovato);
+                            List<DistributoreAutomatico> listaDistributoriFromDB = puntoVenditaDAO.listaDistributoriAutomaticiAttivi();
+                            puntoVenditaDAO.emettiBiglietto(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())));
+                            System.out.println("Scegli tra le seguenti opzioni:");
+                            System.out.println("1. Valida Biglietto");
+                            System.out.println("2. Torna indietro");
+                            int sceltaValidazione = Integer.parseInt(sc.nextLine());
+                            try {
+                                switch (sceltaValidazione) {
+                                    case 1:
+                                        
+                                }
+                            }
                         } else if (scelta1 == 2) {
-                            System.out.println("Inserisci l'id del rivenditore autorizzato: ");
-                            String idRivenditore = sc.nextLine();
-                            PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idRivenditore);
-                            puntoVenditaDAO.emettiBiglietto(puntoVenditaTrovato);
+                            List<Rivenditore> listaRivenditoriFromDB = puntoVenditaDAO.listaRivenditoriConLicenza();
+                            puntoVenditaDAO.emettiBiglietto(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())));
                         }
                         break;
                     case 2:
+                        Tessera nuovaTessera = new Tessera(LocalDate.now());
+                        tesseraDAO.aggiungiTessera(nuovaTessera, nuovoUtente);
                         System.out.println("Da quale punto di vendita emettere l'abbonamento?");
                         System.out.println("1. Distributore Automatico");
                         System.out.println("2. Rivenditore Autorizzato");
                         int scelta2 = Integer.parseInt(sc.nextLine());
                         if (scelta2 == 1) {
-                            System.out.println("Inserisci l'id del distributore automatico: ");
-                            String idDistributore = sc.nextLine();
-                            PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idDistributore);
+                            List<DistributoreAutomatico> listaDistributoriFromDB = puntoVenditaDAO.listaDistributoriAutomaticiAttivi();
                             System.out.println("Selezionare il tipo di abbonamento:");
                             System.out.println("1. Mensile");
                             System.out.println("2. Settimanale");
                             int scelta3 = Integer.parseInt(sc.nextLine());
                             if (scelta3 == 1) {
-                                puntoVenditaDAO.emettiAbbonamento(puntoVenditaTrovato, nuovoUtente, TipoAbbonamento.MENSILE );
+                                puntoVenditaDAO.emettiAbbonamento(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())), nuovoUtente, TipoAbbonamento.MENSILE );
                             } else if (scelta3 == 2) {
-                                 puntoVenditaDAO.emettiAbbonamento(puntoVenditaTrovato, nuovoUtente, TipoAbbonamento.SETTIMANALE);
+                                puntoVenditaDAO.emettiAbbonamento(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())), nuovoUtente, TipoAbbonamento.SETTIMANALE );
+
                             }
 
                         } else if (scelta2 == 2) {
-                            System.out.println("Inserisci l'id del rivenditore autorizzato: ");
-                            String idRivenditore = sc.nextLine();
-                            PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idRivenditore);
+                            List<Rivenditore> listaRivenditoriFromDB = puntoVenditaDAO.listaRivenditoriConLicenza();
                             System.out.println("Selezionare il tipo di abbonamento:");
                             System.out.println("1. Mensile");
                             System.out.println("2. Settimanale");
                             int scelta3 = Integer.parseInt(sc.nextLine());
                             if (scelta3 == 1) {
-                                puntoVenditaDAO.emettiAbbonamento(puntoVenditaTrovato, nuovoUtente, TipoAbbonamento.MENSILE );
+                                puntoVenditaDAO.emettiAbbonamento(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())), nuovoUtente, TipoAbbonamento.MENSILE );
                             } else if (scelta3 == 2) {
-                                puntoVenditaDAO.emettiAbbonamento(puntoVenditaTrovato, nuovoUtente, TipoAbbonamento.SETTIMANALE);
+                                puntoVenditaDAO.emettiAbbonamento(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())), nuovoUtente, TipoAbbonamento.SETTIMANALE );
                             }
                         }
                         break;
                     case 3:
+                        System.out.println("Inserisci il biglietto da validare:");
+
                 }
             } catch (Exception e) {
                 System.out.println("Scelta non valida");
