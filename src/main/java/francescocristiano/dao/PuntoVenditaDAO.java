@@ -89,6 +89,11 @@ public class PuntoVenditaDAO {
         return em.createQuery("SELECT COUNT(t) FROM TitoloDiViaggio t WHERE t.puntoVendita = :puntoVendita", Long.class).setParameter("puntoVendita", puntoVendita).getSingleResult();
     }
 
+  /*  public long conteggioTitoliDiViaggioEmessiPerPuntoVendita(String id) {
+        PuntoVendita puntoVendita = findById(id);
+        return em.createQuery("SELECT COUNT(t) FROM TitoloDiViaggio t WHERE t.puntoVendita = :puntoVendita", Long.class).setParameter("puntoVendita", puntoVendita).getSingleResult();
+    }*/
+
     public long conteggioTitoliDiViaggioEmessiPerData(LocalDate dataInizio, LocalDate dataFine) {
         return em.createQuery("SELECT COUNT(tv) FROM TitoloDiViaggio tv WHERE tv.dataEmissione BETWEEN :dataInizio AND :dataFine", Long.class).setParameter("dataInizio", dataInizio).setParameter("dataFine", dataFine).getSingleResult();
     }
@@ -96,19 +101,23 @@ public class PuntoVenditaDAO {
     public long conteggioTitoliDiViaggioEmessiPerDataPerPuntoVendita(LocalDate dataInizio, LocalDate dataFine, PuntoVendita puntoVendita) {
         return em.createQuery("SELECT COUNT(tv) FROM TitoloDiViaggio tv WHERE tv.dataEmissione BETWEEN :dataInizio AND :dataFine AND tv.puntoVendita = :puntoVendita", Long.class).setParameter("dataInizio", dataInizio).setParameter("dataFine", dataFine).setParameter("puntoVendita", puntoVendita).getSingleResult();
     }
+
     public List<DistributoreAutomatico> listaDistributoriAutomaticiAttivi() {
         return em.createQuery("SELECT d FROM DistributoreAutomatico d WHERE d.stato = :stato", DistributoreAutomatico.class)
                 .setParameter("stato", StatusDistributore.ATTIVO)
                 .getResultList();
     }
+
     public List<DistributoreAutomatico> listaDistributoriAutomaticiNonAttivi() {
         return em.createQuery("SELECT d FROM DistributoreAutomatico d WHERE d.stato = :stato", DistributoreAutomatico.class)
                 .setParameter("stato", StatusDistributore.FUORI_SERVIZIO)
                 .getResultList();
     }
+
     public List<Rivenditore> listaRivenditoriConLicenza() {
         return em.createQuery("SELECT r FROM Rivenditore r WHERE r.licenza = true", Rivenditore.class).getResultList();
     }
+
     public List<Rivenditore> listaRivenditoriSenzaLicenza() {
         return em.createQuery("SELECT r FROM Rivenditore r WHERE r.licenza = false", Rivenditore.class).getResultList();
     }
