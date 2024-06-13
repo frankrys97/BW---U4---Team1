@@ -536,6 +536,7 @@ public class Service {
         String cognome = sc.nextLine();
         Utente nuovoUtente = new Utente(nome, cognome);
         utenteDAO.aggiungiUtente(nuovoUtente);
+        Utente utenteFromDB = utenteDAO.findById(nuovoUtente.getId().toString());
         while (true) {
             System.out.println("Scegli un opzione:");
             System.out.println("1. Acquistare un biglietto");
@@ -598,7 +599,7 @@ public class Service {
                         break;
                     case 2:
                         Tessera nuovaTessera = new Tessera(LocalDate.now());
-                        tesseraDAO.aggiungiTessera(nuovaTessera, nuovoUtente);
+                        tesseraDAO.aggiungiTessera(nuovaTessera, utenteFromDB);
                         System.out.println("Da quale punto di vendita emettere l'abbonamento?");
                         System.out.println("1. Distributore Automatico");
                         System.out.println("2. Rivenditore Autorizzato");
@@ -610,10 +611,45 @@ public class Service {
                             System.out.println("2. Settimanale");
                             int scelta3 = Integer.parseInt(sc.nextLine());
                             if (scelta3 == 1) {
-                                puntoVenditaDAO.emettiAbbonamento(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())), nuovoUtente, TipoAbbonamento.MENSILE );
+                                Abbonamento abbonamentoEmesso = puntoVenditaDAO.emettiAbbonamento(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())), utenteFromDB, TipoAbbonamento.MENSILE );
+                                titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
+                                TitoloDiViaggio abbonamentoEmessoFromDB = titoloDiViaggioDAO.findById(abbonamentoEmesso.getId().toString());
+                                System.out.println("Scegli tra le seguenti opzioni:");
+                                System.out.println("1. Valida Abbonamento");
+                                System.out.println("2. Torna indietro");
+                                int sceltaValidazione = Integer.parseInt(sc.nextLine());
+                                try {
+                                    switch (sceltaValidazione) {
+                                        case 1:
+                                            List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
+                                            validazioneDAO.vidimazioneAbbonamento((Abbonamento) abbonamentoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                                            break;
+                                        case 2:
+                                            return;
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Scelta non valida");
+                                }
                             } else if (scelta3 == 2) {
-                                puntoVenditaDAO.emettiAbbonamento(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())), nuovoUtente, TipoAbbonamento.SETTIMANALE );
-
+                                Abbonamento abbonamentoEmesso = puntoVenditaDAO.emettiAbbonamento(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())), utenteFromDB, TipoAbbonamento.SETTIMANALE );
+                                titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
+                                TitoloDiViaggio abbonamentoEmessoFromDB = titoloDiViaggioDAO.findById(abbonamentoEmesso.getId().toString());
+                                System.out.println("Scegli tra le seguenti opzioni:");
+                                System.out.println("1. Valida Abbonamento");
+                                System.out.println("2. Torna indietro");
+                                int sceltaValidazione = Integer.parseInt(sc.nextLine());
+                                try {
+                                    switch (sceltaValidazione) {
+                                        case 1:
+                                            List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
+                                            validazioneDAO.vidimazioneAbbonamento((Abbonamento) abbonamentoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                                            break;
+                                        case 2:
+                                            return;
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Scelta non valida");
+                                }
                             }
 
                         } else if (scelta2 == 2) {
@@ -623,9 +659,45 @@ public class Service {
                             System.out.println("2. Settimanale");
                             int scelta3 = Integer.parseInt(sc.nextLine());
                             if (scelta3 == 1) {
-                                puntoVenditaDAO.emettiAbbonamento(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())), nuovoUtente, TipoAbbonamento.MENSILE );
+                                Abbonamento abbonamentoEmesso = puntoVenditaDAO.emettiAbbonamento(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())), utenteFromDB, TipoAbbonamento.MENSILE );
+                                titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
+                                TitoloDiViaggio abbonamentoEmessoFromDB = titoloDiViaggioDAO.findById(abbonamentoEmesso.getId().toString());
+                                System.out.println("Scegli tra le seguenti opzioni:");
+                                System.out.println("1. Valida Abbonamento");
+                                System.out.println("2. Torna indietro");
+                                int sceltaValidazione = Integer.parseInt(sc.nextLine());
+                                try {
+                                    switch (sceltaValidazione) {
+                                        case 1:
+                                            List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
+                                            validazioneDAO.vidimazioneAbbonamento((Abbonamento) abbonamentoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                                            break;
+                                        case 2:
+                                            return;
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Scelta non valida");
+                                }
                             } else if (scelta3 == 2) {
-                                puntoVenditaDAO.emettiAbbonamento(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())), nuovoUtente, TipoAbbonamento.SETTIMANALE );
+                                Abbonamento abbonamentoEmesso = puntoVenditaDAO.emettiAbbonamento(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())), utenteFromDB, TipoAbbonamento.SETTIMANALE );
+                                titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
+                                TitoloDiViaggio abbonamentoEmessoFromDB = titoloDiViaggioDAO.findById(abbonamentoEmesso.getId().toString());
+                                System.out.println("Scegli tra le seguenti opzioni:");
+                                System.out.println("1. Valida Abbonamento");
+                                System.out.println("2. Torna indietro");
+                                int sceltaValidazione = Integer.parseInt(sc.nextLine());
+                                try {
+                                    switch (sceltaValidazione) {
+                                        case 1:
+                                            List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
+                                            validazioneDAO.vidimazioneAbbonamento((Abbonamento) abbonamentoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                                            break;
+                                        case 2:
+                                            return;
+                                    }
+                                } catch (Exception e) {
+                                    System.out.println("Scelta non valida");
+                                }
                             }
                         }
                         break;

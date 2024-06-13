@@ -59,7 +59,7 @@ public class PuntoVenditaDAO {
        return bigliettoEmesso;
     }
 
-    public void emettiAbbonamento(PuntoVendita puntoVendita, Utente utente, TipoAbbonamento tipoAbbonamento) throws Exception {
+    public Abbonamento emettiAbbonamento(PuntoVendita puntoVendita, Utente utente, TipoAbbonamento tipoAbbonamento) throws Exception {
         Tessera tessera = utente.getNumeroTessera();
         if (tessera == null) {
             throw new Exception("L'utente non possiede una tessera per l'abbonamento");
@@ -80,8 +80,7 @@ public class PuntoVenditaDAO {
         }
 
         Abbonamento abbonamentoEmesso = new Abbonamento(LocalDate.now(), puntoVendita, tipoAbbonamento, tessera);
-        titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
-        System.out.println("Abbbonamento emesso con successo");
+        return abbonamentoEmesso;
     }
 
     public long conteggioTitoliDiViaggioEmessiPerPuntoVendita(PuntoVendita puntoVendita) {
