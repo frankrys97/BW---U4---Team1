@@ -16,13 +16,13 @@ public class Tessera {
     private LocalDate dataEmissione;
     @Column(name = "data_scadenza")
     private LocalDate dataScadenza;
-    @OneToOne
+  /*  @OneToOne
     @JoinColumn(name = "utente_id") // Chiedere a Riccardo
-    private Utente utente; // Chiedere a Riccardo
+    private Utente utente;*/
 
 
-    /*@OneToOne(mappedBy = "tessera")
-    private Tessera tessera;*/
+    @OneToOne(mappedBy = "numeroTessera")
+    private Utente utente;
 
 
     @OneToMany(mappedBy = "tessera")

@@ -16,7 +16,9 @@ public class TesseraDAO {
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
         tessera.setUtente(utente);
+        utente.setNumeroTessera(tessera);
         em.persist(tessera);
+        em.merge(utente);
         transaction.commit();
         System.out.println("Tessera di " + tessera.getUtente().getNome() + ", " + tessera.getUtente().getCognome() + " salvata con successo nel database!");
     }

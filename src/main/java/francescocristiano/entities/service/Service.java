@@ -55,8 +55,10 @@ public class Service {
             Utente utente = new Utente(faker.name().firstName(), faker.name().lastName());
             utenteDAO.aggiungiUtente(utente);
 
+            Utente utenteFromDB = utenteDAO.findById(utente.getId().toString());
+
             Tessera tessera = new Tessera(LocalDate.now());
-            tesseraDAO.aggiungiTessera(tessera, utente);
+            tesseraDAO.aggiungiTessera(tessera, utenteFromDB);
         }
 
 
