@@ -7,6 +7,8 @@ import francescocristiano.entities.puntiVendita.DistributoreAutomatico;
 import francescocristiano.entities.puntiVendita.PuntoVendita;
 import francescocristiano.entities.puntiVendita.Rivenditore;
 import francescocristiano.entities.titoliDiViaggio.Abbonamento;
+import francescocristiano.entities.titoliDiViaggio.Biglietto;
+import francescocristiano.entities.titoliDiViaggio.TitoloDiViaggio;
 import francescocristiano.entities.utenti.Tessera;
 import francescocristiano.entities.utenti.Utente;
 import francescocristiano.enums.AttivitaMezzo;
@@ -551,7 +553,9 @@ public class Service {
                         int scelta1 = Integer.parseInt(sc.nextLine());
                         if (scelta1 == 1) {
                             List<DistributoreAutomatico> listaDistributoriFromDB = puntoVenditaDAO.listaDistributoriAutomaticiAttivi();
-                            puntoVenditaDAO.emettiBiglietto(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())));
+                            Biglietto bigliettoEmesso = puntoVenditaDAO.emettiBiglietto(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())));
+                            titoloDiViaggioDAO.aggiungiTitoloDiViaggio(bigliettoEmesso);
+                            TitoloDiViaggio bigliettoEmessoFromDB = titoloDiViaggioDAO.findById(bigliettoEmesso.getId().toString());
                             System.out.println("Scegli tra le seguenti opzioni:");
                             System.out.println("1. Valida Biglietto");
                             System.out.println("2. Torna indietro");
@@ -559,12 +563,37 @@ public class Service {
                             try {
                                 switch (sceltaValidazione) {
                                     case 1:
-                                        
+                                        List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
+                                        validazioneDAO.vidimazioneBiglietto((Biglietto) bigliettoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                                        break;
+                                    case 2:
+                                        return;
                                 }
+                            } catch (Exception e) {
+                                System.out.println("Scelta non valida");
                             }
                         } else if (scelta1 == 2) {
                             List<Rivenditore> listaRivenditoriFromDB = puntoVenditaDAO.listaRivenditoriConLicenza();
-                            puntoVenditaDAO.emettiBiglietto(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())));
+                            Biglietto bigliettoEmesso = puntoVenditaDAO.emettiBiglietto(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())));
+                            titoloDiViaggioDAO.aggiungiTitoloDiViaggio(bigliettoEmesso);
+                            TitoloDiViaggio bigliettoEmessoFromDB = titoloDiViaggioDAO.findById(bigliettoEmesso.getId().toString());
+                            System.out.println("Scegli tra le seguenti opzioni:");
+                            System.out.println("1. Valida Biglietto");
+                            System.out.println("2. Torna indietro");
+                            int sceltaValidazione = Integer.parseInt(sc.nextLine());
+                            try {
+                                switch (sceltaValidazione) {
+                                    case 1:
+                                        List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
+                                        validazioneDAO.vidimazioneBiglietto((Biglietto) bigliettoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                                        break;
+                                    case 2:
+                                        return;
+                                }
+                            } catch (Exception e) {
+                                System.out.println("Scelta non valida");
+                            }
+
                         }
                         break;
                     case 2:
