@@ -170,7 +170,7 @@ public class Service {
                         menuGestioneVendita();
                         break;
                     case 2:
-                        munuGestioneParcoMezzi();
+//                        munuGestioneParcoMezzi();
                         break;
                     case 3:
                         return;
