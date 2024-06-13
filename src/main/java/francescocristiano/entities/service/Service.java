@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-import static francescocristiano.Application.emf;
-
 public class Service {
     static Scanner sc = new Scanner(System.in);
     private EntityManager em;
@@ -70,8 +68,8 @@ public class Service {
             tesseraDAO.aggiungiTessera(tessera, utenteFromDB);
         }
 
-        for(int i = 0; i < 5; i++){
-            Utente utente = new Utente(faker.name().firstName(),faker.name().lastName());
+        for (int i = 0; i < 5; i++) {
+            Utente utente = new Utente(faker.name().firstName(), faker.name().lastName());
             utenteDAO.aggiungiUtente(utente);
         }
 
@@ -114,11 +112,12 @@ public class Service {
         }
 
     }
+
     public void startApp() {
         System.out.println("Benvenuto In EpiAtac - JPA Edition");
         inizializzaDataBase();
         System.out.println();
-        while(true) {
+        while (true) {
             System.out.println("Che tipo di utente sei: ");
             System.out.println("1. Amministratore");
             System.out.println("2. Utente");
@@ -126,24 +125,25 @@ public class Service {
             System.out.println();
 
             try {
-              int scelta = Integer.parseInt(sc.nextLine());
-              switch (scelta) {
-                  case 1:
-                      System.out.println();
-                      break;
-                  case 2:
-                      System.out.println();
-                      break;
-                  case 3:
-                      System.out.println("Arrivederci");
-                      resetDataBase();
-                      break;
-              }
+                int scelta = Integer.parseInt(sc.nextLine());
+                switch (scelta) {
+                    case 1:
+                        System.out.println();
+                        break;
+                    case 2:
+                        System.out.println();
+                        break;
+                    case 3:
+                        System.out.println("Arrivederci");
+                        resetDataBase();
+                        break;
+                }
             } catch (Exception e) {
                 System.out.println("Scelta non valida");
             }
         }
     }
+
     public void resetDataBase() {
         em.getTransaction().begin();
         em.createNativeQuery("DROP TABLE abbonamento, biglietto, corsa, distributoreautomatico, mezzo, periodoserviziomanutenzione, puntovendita, rivenditore, tessera, titolodiviaggio, tratta, utente, validazione, validazioneabbonamento, validazionebiglietto").executeUpdate();
@@ -170,7 +170,9 @@ public class Service {
                         menuGestioneVendita();
                         break;
                     case 2:
+/*
                         munuGestioneParcoMezzi();
+*/
                         break;
                     case 3:
                         return;
@@ -180,6 +182,7 @@ public class Service {
             }
         }
     }
+
     public void menuGestioneVendita() {
         while (true) {
             System.out.println("Menu Gestione Vendita - Scegli un'opzione");
@@ -203,6 +206,7 @@ public class Service {
             }
         }
     }
+
     public void menuGestioneUtenti() {
         while (true) {
             System.out.println("Menu Gestione Utenti - Scegli un'opzione");
@@ -216,14 +220,16 @@ public class Service {
                         utenteDAO.findListaUtentiConAbbonamento().forEach(System.out::println);
                         System.out.println();
                         System.out.println("Il numero totale di utenti con abbonamento è: " + utenteDAO.findListaUtentiConAbbonamento().size());
-                    break;
-                    case 2: return;
+                        break;
+                    case 2:
+                        return;
                 }
             } catch (Exception e) {
                 System.out.println("Scelta non valida");
             }
         }
     }
+
     public void menuGestionePuntiVendita() {
         while (true) {
             System.out.println("Menu Punti Vendita - Scegli un'opzione");
