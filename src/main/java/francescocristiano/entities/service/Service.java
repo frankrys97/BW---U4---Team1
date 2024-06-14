@@ -844,6 +844,7 @@ public class Service {
                 System.out.println("Scelta non valida");
             }
         } else {
+            Scanner scanner = new Scanner(System.in);
             System.out.println("Questi sono i tuoi dati: ");
             System.out.println();
             System.out.println(utenteFromDB);
@@ -852,7 +853,7 @@ public class Service {
             System.out.println("1. Verifica scadenza abbonamento");
             System.out.println("2. Rinnova abbonamento");
             System.out.println("3. Torna indietro");
-            int scelta = Integer.parseInt(sc.nextLine());
+            int scelta = Integer.parseInt(scanner.nextLine().trim());
             try {
                 switch (scelta) {
                     case 1:
@@ -863,17 +864,19 @@ public class Service {
                         break;
                     case 3:
                 }
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Scelta non valida");
+            } catch (Exception e) {
+                System.out.println("Errore: " + e.getMessage());
+
             }
         }
     }
 
     public void verificaScadenzaAbbonamentoDiUtente(Utente utente) {
-        Tessera tesseraFromDB = tesseraDAO.findById(utente.getNumeroTessera().toString());
-        if (tesseraFromDB != null && !tesseraFromDB.getAbbonamenti().isEmpty()) {
-            /*Abbonamento abbonamento = tesseraFromDB.getAbbonamenti().getFirst();*/
-            List<Abbonamento> abbonamenti = tesseraFromDB.getAbbonamenti();
+        Tessera tesseraFromDB = tesseraDAO.findById(utente.getNumeroTessera().getId().toString().trim());
+        List<Abbonamento> abbonamenti = titoloDiViaggioDAO.trovaTuttiGliAbbonamenti().stream().filter(abbonamento -> abbonamento.getTessera().getId().equals(tesseraFromDB.getId())).toList();
+        if (tesseraFromDB != null && !abbonamenti.isEmpty()) {
             System.out.println("Scegli l'abbonamento che vuoi verificare:");
             for (int i = 0; i < abbonamenti.size(); i++) {
                 System.out.println((i + 1) + ". " + abbonamenti.get(i));
@@ -884,7 +887,8 @@ public class Service {
                 return;
             }
             Abbonamento abbonamento = abbonamenti.get(sceltaAbbonamento - 1);
-            LocalDate dataScadenza = abbonamento.dataScadenzaAbbonamento();
+            Abbonamento abbonamentoFromDB = (Abbonamento) titoloDiViaggioDAO.findById(abbonamento.getId().toString().trim());
+            LocalDate dataScadenza = abbonamentoFromDB.getDataScadenza();
             if (dataScadenza.isBefore(LocalDate.now())) {
                 System.out.println("Il tuo abbonamento e' scaduto");
                 System.out.println("Vuoi rinnovarlo?");
@@ -915,28 +919,30 @@ public class Service {
         System.out.println("2. 1 mese");
 
         int sceltaRinnovo = Integer.parseInt(sc.nextLine());
-        LocalDate nuovaDataScadenza = abbonamento.getDataScadenza();
+        LocalDate nuovaDataScadenza = LocalDate.now();
 
         switch (sceltaRinnovo) {
             case 1:
                 nuovaDataScadenza = nuovaDataScadenza.plusDays(7);
+                abbonamento.setDataScadenza(nuovaDataScadenza);
+                abbonamento.setTipoAbbonamento(TipoAbbonamento.SETTIMANALE);
                 break;
             case 2:
                 nuovaDataScadenza = nuovaDataScadenza.plusMonths(1);
+                abbonamento.setDataScadenza(nuovaDataScadenza);
+                abbonamento.setTipoAbbonamento(TipoAbbonamento.MENSILE);
                 break;
         }
 
-        abbonamento.setDataScadenza(nuovaDataScadenza);
-        titoloDiViaggioDAO.aggiornaTitoloDiViaggio(abbonamento); // Assicurati di avere un metodo nel DAO per aggiornare l'abbonamento
+        titoloDiViaggioDAO.aggiornaTitoloDiViaggio(abbonamento);
 
         System.out.println("Abbonamento rinnovato con successo fino al " + nuovaDataScadenza);
     }
 
     public void rinnovaAbbonamentoGenerico(Utente utente) {
-        Tessera tesseraFromDB = tesseraDAO.findById(utente.getNumeroTessera().toString());
-        if (tesseraFromDB != null && !tesseraFromDB.getAbbonamenti().isEmpty()) {
-            /*Abbonamento abbonamento = tesseraFromDB.getAbbonamenti().getFirst();*/
-            List<Abbonamento> abbonamenti = tesseraFromDB.getAbbonamenti();
+        Tessera tesseraFromDB = tesseraDAO.findById(utente.getNumeroTessera().getId().toString().trim());
+        List<Abbonamento> abbonamenti = titoloDiViaggioDAO.trovaTuttiGliAbbonamenti().stream().filter(abbonamento -> abbonamento.getTessera().getId().equals(tesseraFromDB.getId())).toList();
+        if (tesseraFromDB != null && !abbonamenti.isEmpty()) {
             System.out.println("Scegli l'abbonamento che vuoi rinnovare:");
             for (int i = 0; i < abbonamenti.size(); i++) {
                 System.out.println((i + 1) + ". " + abbonamenti.get(i));
@@ -948,7 +954,11 @@ public class Service {
             }
             Abbonamento abbonamento = abbonamenti.get(scelta - 1);
 
-            rinnovaAbbonamento(abbonamento);
+            if (abbonamento.getDataScadenza().isBefore(LocalDate.now())) {
+                rinnovaAbbonamento(abbonamento);
+            } else {
+                System.out.println("Il tuo abbonamento è valido per " + ChronoUnit.DAYS.between(LocalDate.now(), abbonamento.getDataScadenza()) + " giorni");
+            }
         } else {
             System.out.println("Non hai abbonamenti");
         }

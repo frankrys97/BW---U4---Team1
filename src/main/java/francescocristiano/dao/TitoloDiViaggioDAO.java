@@ -1,10 +1,12 @@
 package francescocristiano.dao;
 
+import francescocristiano.entities.titoliDiViaggio.Abbonamento;
 import francescocristiano.entities.titoliDiViaggio.TitoloDiViaggio;
 import francescocristiano.exceptions.NotFoundException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 
+import java.util.List;
 import java.util.UUID;
 
 public class TitoloDiViaggioDAO {
@@ -34,5 +36,9 @@ public class TitoloDiViaggioDAO {
         em.merge(titoloDiViaggio);
         transaction.commit();
         System.out.println("Titolo di viaggio aggiornato con successo nel database!");
+    }
+
+    public List<Abbonamento> trovaTuttiGliAbbonamenti() {
+        return em.createQuery("SELECT a FROM Abbonamento a", Abbonamento.class).getResultList();
     }
 }

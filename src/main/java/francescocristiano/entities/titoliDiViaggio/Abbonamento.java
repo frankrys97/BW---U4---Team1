@@ -71,4 +71,12 @@ public class Abbonamento extends TitoloDiViaggio {
     public void setValidazioniAbbonamenti(List<ValidazioneAbbonamento> validazioniAbbonamenti) {
         this.validazioniAbbonamenti = validazioniAbbonamenti;
     }
+
+    @Override
+    public String toString() {
+        return "Abbonamento{" +
+                "dataScadenza=" + dataScadenza +
+                ", tipoAbbonamento=" + tipoAbbonamento +
+                '}';
+    }
 }
