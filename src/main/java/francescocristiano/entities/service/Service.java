@@ -172,7 +172,7 @@ public class Service {
                         menuAdmin();
                         break;
                     case 2:
-                        System.out.println();
+                        menuUtente();
                         break;
                     case 3:
                         System.out.println("Arrivederci");
@@ -527,9 +527,7 @@ public class Service {
                         gestioneUtenteNuovo();
                         break;
                     case 2:
-/*
                         gestioneUtenteRegistrato();
-*/
                         break;
                     case 3:
                         return;
@@ -828,28 +826,46 @@ public class Service {
         System.out.println("Inserisci il tuo codice utente:");
         String codiceUtente = sc.nextLine();
         Utente utenteFromDB = (Utente) utenteDAO.findById(codiceUtente);
-        System.out.println("Questi sono i tuoi dati: ");
-        System.out.println();
-        System.out.println(utenteFromDB);
-        System.out.println();
-        System.out.println("Cosa vuoi fare?");
-        System.out.println("1. Verifica scadenza abbonamento");
-        System.out.println("2. Rinnova abbonamento");
-        System.out.println("3. Torna indietro");
-        int scelta = Integer.parseInt(sc.nextLine());
-        try {
-            switch (scelta) {
-                case 1:
-                    verificaScadenzaAbbonamentoDiUtente(utenteFromDB);
-                    break;
-                case 2:
-                    rinnovaAbbonamentoGenerico(utenteFromDB);
-                    break;
-                case 3:
-                    return;
+        if (utenteFromDB.getNumeroTessera() == null) {
+            System.out.println("Non hai un abbonamento associato, vorresti acquistarlo?");
+            System.out.println("1. Si");
+            System.out.println("2. No");
+            int sceltaAcquisto = Integer.parseInt(sc.nextLine());
+            try {
+                switch (sceltaAcquisto) {
+                    case 1:
+                        acquistaAbbonamento(utenteFromDB);
+                        break;
+                    case 2:
+                        menuUtente();
+                        break;
+                }
+            } catch (Exception e) {
+                System.out.println("Scelta non valida");
             }
-        } catch (Exception e) {
-            System.out.println("Scelta non valida");
+        } else {
+            System.out.println("Questi sono i tuoi dati: ");
+            System.out.println();
+            System.out.println(utenteFromDB);
+            System.out.println();
+            System.out.println("Cosa vuoi fare?");
+            System.out.println("1. Verifica scadenza abbonamento");
+            System.out.println("2. Rinnova abbonamento");
+            System.out.println("3. Torna indietro");
+            int scelta = Integer.parseInt(sc.nextLine());
+            try {
+                switch (scelta) {
+                    case 1:
+                        verificaScadenzaAbbonamentoDiUtente(utenteFromDB);
+                        break;
+                    case 2:
+                        rinnovaAbbonamentoGenerico(utenteFromDB);
+                        break;
+                    case 3:
+                }
+            } catch (Exception e) {
+                System.out.println("Scelta non valida");
+            }
         }
     }
 
@@ -862,12 +878,12 @@ public class Service {
             for (int i = 0; i < abbonamenti.size(); i++) {
                 System.out.println((i + 1) + ". " + abbonamenti.get(i));
             }
-            int scelta = Integer.parseInt(sc.nextLine());
-            if (scelta < 1 || scelta > abbonamenti.size()) {
+            int sceltaAbbonamento = Integer.parseInt(sc.nextLine());
+            if (sceltaAbbonamento < 1 || sceltaAbbonamento > abbonamenti.size()) {
                 System.out.println("Scelta non valida.");
                 return;
             }
-            Abbonamento abbonamento = abbonamenti.get(scelta - 1);
+            Abbonamento abbonamento = abbonamenti.get(sceltaAbbonamento - 1);
             LocalDate dataScadenza = abbonamento.dataScadenzaAbbonamento();
             if (dataScadenza.isBefore(LocalDate.now())) {
                 System.out.println("Il tuo abbonamento e' scaduto");
@@ -908,9 +924,6 @@ public class Service {
             case 2:
                 nuovaDataScadenza = nuovaDataScadenza.plusMonths(1);
                 break;
-            default:
-                System.out.println("Scelta non valida.");
-                return;
         }
 
         abbonamento.setDataScadenza(nuovaDataScadenza);
@@ -936,8 +949,6 @@ public class Service {
             Abbonamento abbonamento = abbonamenti.get(scelta - 1);
 
             rinnovaAbbonamento(abbonamento);
-
-
         } else {
             System.out.println("Non hai abbonamenti");
         }
