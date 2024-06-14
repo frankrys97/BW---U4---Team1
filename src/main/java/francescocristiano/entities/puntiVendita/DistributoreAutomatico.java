@@ -27,8 +27,7 @@ public class DistributoreAutomatico extends PuntoVendita {
 
     @Override
     public String toString() {
-        return "DistributoreAutomatico{" +
-                "stato=" + stato +
-                '}';
+        return "DistributoreAutomatico: " + super.toString() +
+                "stato=" + stato;
     }
 }

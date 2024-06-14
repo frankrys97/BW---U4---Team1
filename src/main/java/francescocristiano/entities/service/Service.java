@@ -195,7 +195,7 @@ public class Service {
 
     public void menuAdmin() {
         System.out.println("Inserisci la password: ");
-        String password = sc.nextLine();
+        String password = sc.nextLine().toLowerCase();
         if (!password.equals("epicode")) {
             System.out.println("Password errata!");
             return;
@@ -248,6 +248,7 @@ public class Service {
     }
 
     public void menuGestioneUtenti() {
+        System.out.println();
         while (true) {
             System.out.println("Menu Gestione Utenti - Scegli un'opzione");
             System.out.println("1. Stampa la lista di utenti con abbonamento");
@@ -260,6 +261,7 @@ public class Service {
                         utenteDAO.findListaUtentiConAbbonamento().forEach(System.out::println);
                         System.out.println();
                         System.out.println("Il numero totale di utenti con abbonamento è: " + utenteDAO.findListaUtentiConAbbonamento().size());
+                        System.out.println();
                         break;
                     case 2:
                         return;
@@ -271,6 +273,7 @@ public class Service {
     }
 
     public void menuGestionePuntiVendita() {
+        System.out.println();
         while (true) {
             System.out.println("Menu Punti Vendita - Scegli un'opzione");
             System.out.println("1. Lista Distributori Automatici attivi");
@@ -285,52 +288,104 @@ public class Service {
             try {
                 switch (scelta) {
                     case 1:
+                        System.out.println();
                         System.out.println("La lista di Distributori Automatici attivi è la seguente: ");
                         puntoVenditaDAO.listaDistributoriAutomaticiAttivi().forEach(System.out::println);
                         System.out.println();
                         System.out.println("Il numero totale di Distributori Automatici attivi è: " + puntoVenditaDAO.listaDistributoriAutomaticiAttivi().size());
+                        System.out.println();
                         break;
                     case 2:
+                        System.out.println();
                         System.out.println("La lista di Distributori Automatici Fuori Servizio è la seguente: ");
                         puntoVenditaDAO.listaDistributoriAutomaticiNonAttivi().forEach(System.out::println);
                         System.out.println();
                         System.out.println("Il numero totale di Distributori Automatici Fuori Servizio è: " + puntoVenditaDAO.listaDistributoriAutomaticiNonAttivi().size());
+                        System.out.println();
                         break;
                     case 3:
+                        System.out.println();
                         System.out.println("La lista di Rivenditori Con Licenza è la seguente: ");
                         puntoVenditaDAO.listaRivenditoriConLicenza().forEach(System.out::println);
                         System.out.println();
                         System.out.println("Il numero totale di Rivenditori Con Licenza è: " + puntoVenditaDAO.listaRivenditoriConLicenza().size());
+                        System.out.println();
                         break;
                     case 4:
+                        System.out.println();
                         System.out.println("La lista di Rivenditori Senza Licenza è la seguente: ");
                         puntoVenditaDAO.listaRivenditoriSenzaLicenza().forEach(System.out::println);
                         System.out.println();
                         System.out.println("Il numero totale di Rivenditori Senza Licenza è: " + puntoVenditaDAO.listaRivenditoriSenzaLicenza().size());
+                        System.out.println();
                         break;
                     case 5:
-                        System.out.println("Inserisci l'id del punto vendita per visualizzare il numero di biglietti e/o abbonamenti emessi:");
-                        String idPuntoVendita = sc.nextLine();
-                        PuntoVendita puntoVenditaTrovato = puntoVenditaDAO.findById(idPuntoVendita);
-                        System.out.println("Il numero di biglietti e/o abbonamenti emessi per il punto vendita con id " + idPuntoVendita + " è: " + puntoVenditaDAO.conteggioTitoliDiViaggioEmessiPerPuntoVendita(puntoVenditaTrovato));
+                        PuntoVendita puntoVenditaTrovato = null;
+                        System.out.println();
+                        try {
+                            System.out.println("Inserisci l'id del punto vendita per visualizzare il numero di biglietti e/o abbonamenti emessi:");
+                            String idPuntoVendita = sc.nextLine();
+                            puntoVenditaTrovato = puntoVenditaDAO.findById(idPuntoVendita);
+                            System.out.println("Il numero di biglietti e/o abbonamenti emessi per il punto vendita con id " + puntoVenditaTrovato.getId() + " è: " + puntoVenditaDAO.conteggioTitoliDiViaggioEmessiPerPuntoVendita(puntoVenditaTrovato));
+                            System.out.println();
+                        } catch (Exception e) {
+                            System.out.println();
+                            System.out.println("Punto vendita non trovato");
+                            System.out.println();
+                            break;
+                        }
+
                         break;
                     case 6:
-                        System.out.println("Inserisci l'intervallo di tempo per visualizzare il numero di biglietti e/o abbonamenti emessi per un determinato periodo:");
-                        System.out.println("Data inizio (yyyy-mm-dd):");
-                        LocalDate dataInizio = LocalDate.parse(sc.nextLine());
-                        System.out.println("Data fine (yyyy-mm-dd):");
-                        LocalDate dataFine = LocalDate.parse(sc.nextLine());
-                        System.out.println("Il numero di biglietti e/o abbonamenti emessi per il periodo selezionato è: " + puntoVenditaDAO.conteggioTitoliDiViaggioEmessiPerData(dataInizio, dataFine));
+                        System.out.println();
+                        LocalDate dataInizio = null;
+                        LocalDate dataFine = null;
+                        try {
+                            System.out.println("Inserisci l'intervallo di tempo per visualizzare il numero di biglietti e/o abbonamenti emessi per un determinato periodo:");
+                            System.out.println("Data inizio (yyyy-mm-dd):");
+                            dataInizio = LocalDate.parse(sc.nextLine());
+                            System.out.println("Data fine (yyyy-mm-dd):");
+                            dataFine = LocalDate.parse(sc.nextLine());
+                            System.out.println("Il numero di biglietti e/o abbonamenti emessi per il periodo selezionato è: " + puntoVenditaDAO.conteggioTitoliDiViaggioEmessiPerData(dataInizio, dataFine));
+                            System.out.println();
+                        } catch (DateTimeParseException e) {
+                            System.out.println();
+                            System.out.println("Data non valida");
+                            System.out.println();
+                            break;
+                        }
+
                         break;
                     case 7:
-                        System.out.println("Inserisci l'id del punto vendita:");
-                        String idPuntoVendita2 = sc.nextLine();
-                        PuntoVendita puntoVenditaTrovato2 = puntoVenditaDAO.findById(idPuntoVendita2);
-                        System.out.println("Inserisci la data d'inizio del periodo da verificare (yyyy-mm-dd):");
-                        LocalDate dataInizio2 = LocalDate.parse(sc.nextLine());
-                        System.out.println("Inserisci la data di fine del periodo da verificare (yyyy-mm-dd):");
-                        LocalDate dataFine2 = LocalDate.parse(sc.nextLine());
-                        System.out.println("Il numero di biglietti emessi dal punto vendita con id " + idPuntoVendita2 + " per il periodo selezionato è: " + puntoVenditaDAO.conteggioTitoliDiViaggioEmessiPerDataPerPuntoVendita(dataInizio2, dataFine2, puntoVenditaTrovato2));
+                        PuntoVendita puntoVenditaTrovato2 = null;
+                        LocalDate dataInizio2 = null;
+                        LocalDate dataFine2 = null;
+                        System.out.println();
+                        try {
+                            System.out.println("Inserisci l'id del punto vendita per visualizzare il numero di biglietti e/o abbonamenti emessi:");
+                            String idPuntoVendita = sc.nextLine();
+                            puntoVenditaTrovato2 = puntoVenditaDAO.findById(idPuntoVendita);
+                        } catch (Exception e) {
+                            System.out.println();
+                            System.out.println("Punto vendita non trovato");
+                            System.out.println();
+                            break;
+                        }
+                        try {
+                            System.out.println("Inserisci la data d'inizio del periodo da verificare (yyyy-mm-dd):");
+                            dataInizio2 = LocalDate.parse(sc.nextLine());
+                            System.out.println("Inserisci la data di fine del periodo da verificare (yyyy-mm-dd):");
+                            dataFine2 = LocalDate.parse(sc.nextLine());
+                            System.out.println();
+                            System.out.println("Il numero di biglietti emessi dal punto vendita con id " + puntoVenditaTrovato2.getId() + " per il periodo selezionato è: " + puntoVenditaDAO.conteggioTitoliDiViaggioEmessiPerDataPerPuntoVendita(dataInizio2, dataFine2, puntoVenditaTrovato2));
+                            System.out.println();
+                        } catch (DateTimeParseException e) {
+                            System.out.println();
+                            System.out.println("Data non valida");
+                            System.out.println();
+                            break;
+                        }
+
                         break;
                     case 8:
                         return;
@@ -346,10 +401,10 @@ public class Service {
     public void menuGestioneParcoMezzi() {
         while (true) {
             System.out.println("Gestione Parco Mezzi");
-            System.out.println("1. Aggiungi mezzo");
-            System.out.println("2. Visualizza mezzi");
-            System.out.println("3. Aggiungi tratta");
-            System.out.println("4. Aggiungi corsa");
+            System.out.println("1. Aggiungi Mezzo");
+            System.out.println("2. Visualizza Mezzi");
+            System.out.println("3. Aggiungi Tratta");
+            System.out.println("4. Aggiungi Corsa");
             System.out.println("5. Torna indietro");
       /*      System.out.println("5. Aggiungi tratta ad un mezzo");
             System.out.println("6. Torna indietro");*/
@@ -360,15 +415,20 @@ public class Service {
                         System.out.println("Che tipo di mezzo vuoi aggiungere?");
                         System.out.println("1. Tram");
                         System.out.println("2. Autobus");
-
+                        System.out.println();
                         try {
                             int scelta2 = Integer.parseInt(sc.nextLine());
+
                             if (scelta2 == 1) {
+                                System.out.println();
                                 mezzoDAO.aggiungiMezzo(new Tram());
                                 System.out.println("Tram aggiunto correttamente");
+                                System.out.println();
                             } else if (scelta2 == 2) {
+                                System.out.println();
                                 mezzoDAO.aggiungiMezzo(new Autobus());
                                 System.out.println("Autobus aggiunto correttamente");
+                                System.out.println();
                             }
                         } catch (Exception e) {
                             System.out.println("Scelta non valida");
@@ -383,6 +443,9 @@ public class Service {
                         System.out.println("Inserisci la zona di arrivo della tratta:");
                         String zonaArrivo = sc.nextLine();
                         trattaDAO.aggiungiTratta(new Tratta(zonaPartenza, zonaArrivo));
+                        System.out.println();
+                        System.out.println("Tratta aggiunta correttamente");
+                        System.out.println();
                         break;
                     case 4: //Aggiungi corsa
                         aggiungiCorsa();
@@ -415,7 +478,9 @@ public class Service {
             String idMezzo = sc.nextLine();
             mezzoTrovato = mezzoDAO.findById(idMezzo);
         } catch (Exception e) {
+            System.out.println();
             System.out.println("Mezzo non trovato");
+            System.out.println();
             return;
         }
 
@@ -424,7 +489,9 @@ public class Service {
             String idTratta = sc.nextLine();
             trattaTrovata = trattaDAO.findById(idTratta);
         } catch (Exception e) {
+            System.out.println();
             System.out.println("Tratta non trovata");
+            System.out.println();
             return;
 
         }
@@ -473,6 +540,7 @@ public class Service {
                         if (mezzoDAO.findAll().isEmpty()) {
                             System.out.println("Nessun mezzo presente");
                         } else {
+                            System.out.println();
                             System.out.println("Lista dei mezzi:");
                             System.out.println();
                             mezzoDAO.findAll().forEach(System.out::println);
@@ -482,58 +550,108 @@ public class Service {
                         if (mezzoDAO.findAll().stream().noneMatch(Mezzo::isInServizio)) {
                             System.out.println("Nessun mezzo in servizio");
                         } else {
+                            System.out.println();
                             System.out.println("Lista dei mezzi in servizio:");
                             System.out.println();
                             mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).forEach(System.out::println);
+                            System.out.println();
+                            System.out.println("Totale dei mezzi in servizio: " + mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).count());
+                            System.out.println();
                         }
                         break;
                     case 3:
                         if (mezzoDAO.findAll().stream().filter(m -> !m.isInServizio()).count() == 0) {
                             System.out.println("Nessun mezzo fuori servizio");
                         } else {
+                            System.out.println();
                             System.out.println("Lista dei mezzi fuori servizio:");
                             System.out.println();
                             mezzoDAO.findAll().stream().filter(m -> !m.isInServizio()).forEach(System.out::println);
+                            System.out.println();
+                            System.out.println("Totale dei mezzi fuori servizio: " + mezzoDAO.findAll().stream().filter(m -> !m.isInServizio()).count());
+                            System.out.println();
                         }
                         break;
                     case 4:
-                        System.out.println("Inserisci l'id del mezzo:");
-                        String idMezzo = sc.nextLine();
-                        Mezzo mezzoTrovato = mezzoDAO.findById(idMezzo);
-                        if (mezzoTrovato != null) {
-                            System.out.println("Elenco dei servizi di periodo/manutenzione per il mezzo con id " + mezzoTrovato.getId() + ":");
+                        Mezzo mezzoTrovato = null;
+                        try {
+                            System.out.println("Inserisci l'id del mezzo:");
+                            String idMezzo = sc.nextLine();
+                            mezzoTrovato = mezzoDAO.findById(idMezzo);
+                        } catch (Exception e) {
                             System.out.println();
-                            periodoServizioManutenzioneDAO.trovaPeriodoServizioManutenzioneMezzo(mezzoTrovato).forEach(System.out::println);
-                        } else {
                             System.out.println("Mezzo non trovato");
+                            System.out.println();
+                            break;
                         }
+                        List<PeriodoServizioManutenzione> periodiServiziManutenzione = periodoServizioManutenzioneDAO.trovaPeriodoServizioManutenzioneMezzo(mezzoTrovato);
+
+                        if (periodiServiziManutenzione.isEmpty()) {
+                            System.out.println();
+                            System.out.println("Il mezzo non ha periodi di manutenzione");
+                            System.out.println();
+                            break;
+                        } else {
+                            System.out.println();
+                            System.out.println("Periodi di manutenzione del mezzo con id: " + mezzoTrovato.getId() + ":");
+                            System.out.println();
+                            periodiServiziManutenzione.forEach(System.out::println);
+                        }
+
                         break;
                     case 5:
-                        System.out.println("Inserisci l'id del mezzo:");
-                        String idMezzo2 = sc.nextLine();
-                        Mezzo mezzoTrovato2 = mezzoDAO.findById(idMezzo2);
-                        if (mezzoTrovato2 != null) {
-                            System.out.println("Numero totale di biglietti validati per il mezzo con id: " + mezzoTrovato2.getId() + ": " + validazioneDAO.conteggioTitoliDiViaggioValidatiPerUnMezzo(mezzoTrovato2));
-                        } else {
+                        Mezzo mezzoTrovato2 = null;
+                        try {
+                            System.out.println("Inserisci l'id del mezzo:");
+                            String idMezzo2 = sc.nextLine();
+                            mezzoTrovato2 = mezzoDAO.findById(idMezzo2);
+                        } catch (Exception e) {
+                            System.out.println();
                             System.out.println("Mezzo non trovato");
+                            System.out.println();
+                            break;
                         }
+                        System.out.println();
+                        System.out.println("Numero totale di biglietti validati per il mezzo con id: " + mezzoTrovato2.getId() + ": " + validazioneDAO.conteggioTitoliDiViaggioValidatiPerUnMezzo(mezzoTrovato2));
+                        System.out.println();
+
                         break;
                     case 6:
-                        System.out.println();
-                        System.out.println("Inserisci l'id del mezzo:");
-                        String idMezzo3 = sc.nextLine();
-                        System.out.println("Inserisci l'id della tratta:");
-                        String idTratta = sc.nextLine();
 
-                        Tratta trattaTrovata = trattaDAO.findById(idTratta);
-                        Mezzo mezzoTrovato3 = mezzoDAO.findById(idMezzo3);
+                        Mezzo mezzoTrovato4 = null;
+                        Tratta trattaTrovata = null;
+                        try {
+                            System.out.println("Inserisci l'ID del mezzo:");
+                            String idMezzo = sc.nextLine();
+                            mezzoTrovato4 = mezzoDAO.findById(idMezzo);
+                        } catch (Exception e) {
+                            System.out.println("Mezzo non trovato");
+                            return;
+                        }
 
-                        if (mezzoTrovato3 != null && trattaTrovata != null) {
-                            System.out.println("Numero di corse per la tratta " + trattaTrovata.getId() + " per il mezzo con id: " + mezzoTrovato3.getId() + ": " + trattaDAO.conteggioCorsePerMezzoPerTratta(trattaTrovata, mezzoTrovato3));
-                        } else {
-                            System.out.println("Mezzo o tratta non trovati");
+                        try {
+                            System.out.println("Inserisci l'ID della tratta:");
+                            String idTratta = sc.nextLine();
+                            trattaTrovata = trattaDAO.findById(idTratta);
+                        } catch (Exception e) {
+                            System.out.println("Tratta non trovata");
+                            return;
 
                         }
+                       /* System.out.println();
+                        System.out.println("Numero di corse per la tratta " + trattaTrovata.getId() + " per il mezzo con id: " + mezzoTrovato4.getId() + ": " + trattaDAO.conteggioCorsePerMezzoPerTratta(trattaTrovata, mezzoTrovato4));
+                        System.out.println();*/
+                        long count = trattaDAO.conteggioCorsePerMezzoPerTratta(trattaTrovata, mezzoTrovato4);
+                        if (count == 0) {
+                            System.out.println();
+                            System.out.println("Nessuna corsa per la tratta " + trattaTrovata.getId() + " per il mezzo con id: " + mezzoTrovato4.getId());
+                            System.out.println();
+                        } else {
+                            System.out.println();
+                            System.out.println("Numero di corsa per la tratta " + trattaTrovata.getId() + " per il mezzo con id: " + mezzoTrovato4.getId() + ": " + count);
+                            System.out.println();
+                        }
+
                         break;
                     case 7:
                         return;
@@ -575,6 +693,7 @@ public class Service {
 
     public void acquistaBiglietto() throws Exception {
         Random rand = new Random();
+        System.out.println();
         System.out.println("Da quale punto di vendita emettere il biglietto?");
         System.out.println("1. Distributore Automatico");
         System.out.println("2. Rivenditore Autorizzato");
@@ -583,6 +702,9 @@ public class Service {
             List<DistributoreAutomatico> listaDistributoriFromDB = puntoVenditaDAO.listaDistributoriAutomaticiAttivi();
             Biglietto bigliettoEmesso = puntoVenditaDAO.emettiBiglietto(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())));
             titoloDiViaggioDAO.aggiungiTitoloDiViaggio(bigliettoEmesso);
+            System.out.println();
+            System.out.println("Biglietto emesso con id: " + bigliettoEmesso.getId());
+            System.out.println();
             TitoloDiViaggio bigliettoEmessoFromDB = titoloDiViaggioDAO.findById(bigliettoEmesso.getId().toString());
             System.out.println("Scegli tra le seguenti opzioni:");
             System.out.println("1. Valida Biglietto");
@@ -593,6 +715,9 @@ public class Service {
                     case 1:
                         List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
                         validazioneDAO.vidimazioneBiglietto((Biglietto) bigliettoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                        System.out.println();
+                        System.out.println("Biglietto validato con successo");
+                        System.out.println();
                         break;
                     case 2:
                         return;
@@ -604,6 +729,9 @@ public class Service {
             List<Rivenditore> listaRivenditoriFromDB = puntoVenditaDAO.listaRivenditoriConLicenza();
             Biglietto bigliettoEmesso = puntoVenditaDAO.emettiBiglietto(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())));
             titoloDiViaggioDAO.aggiungiTitoloDiViaggio(bigliettoEmesso);
+            System.out.println();
+            System.out.println("Biglietto emesso con id: " + bigliettoEmesso.getId());
+            System.out.println();
             TitoloDiViaggio bigliettoEmessoFromDB = titoloDiViaggioDAO.findById(bigliettoEmesso.getId().toString());
             System.out.println("Scegli tra le seguenti opzioni:");
             System.out.println("1. Valida Biglietto");
@@ -614,6 +742,9 @@ public class Service {
                     case 1:
                         List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
                         validazioneDAO.vidimazioneBiglietto((Biglietto) bigliettoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                        System.out.println();
+                        System.out.println("Biglietto validato con successo");
+                        System.out.println();
                         break;
                     case 2:
                         return;
@@ -630,6 +761,9 @@ public class Service {
         Random rand = new Random();
         Tessera nuovaTessera = new Tessera(LocalDate.now());
         tesseraDAO.aggiungiTessera(nuovaTessera, utenteFromDB);
+        System.out.println();
+        System.out.println("Tessera emessa con id: " + nuovaTessera.getId());
+        System.out.println();
         System.out.println("Da quale punto di vendita emettere l'abbonamento?");
         System.out.println("1. Distributore Automatico");
         System.out.println("2. Rivenditore Autorizzato");
@@ -643,6 +777,9 @@ public class Service {
             if (scelta3 == 1) {
                 Abbonamento abbonamentoEmesso = puntoVenditaDAO.emettiAbbonamento(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())), utenteFromDB, TipoAbbonamento.MENSILE);
                 titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
+                System.out.println();
+                System.out.println("Abbonamento Mensile emesso con successo");
+                System.out.println();
                 TitoloDiViaggio abbonamentoEmessoFromDB = titoloDiViaggioDAO.findById(abbonamentoEmesso.getId().toString());
                 System.out.println("Scegli tra le seguenti opzioni:");
                 System.out.println("1. Valida Abbonamento");
@@ -653,6 +790,9 @@ public class Service {
                         case 1:
                             List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
                             validazioneDAO.vidimazioneAbbonamento((Abbonamento) abbonamentoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                            System.out.println();
+                            System.out.println("Abbonamento validato con successo");
+                            System.out.println();
                             break;
                         case 2:
                             return;
@@ -663,6 +803,9 @@ public class Service {
             } else if (scelta3 == 2) {
                 Abbonamento abbonamentoEmesso = puntoVenditaDAO.emettiAbbonamento(listaDistributoriFromDB.get(rand.nextInt(listaDistributoriFromDB.size())), utenteFromDB, TipoAbbonamento.SETTIMANALE);
                 titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
+                System.out.println();
+                System.out.println("Abbonamento Settimanale emesso con successo");
+                System.out.println();
                 TitoloDiViaggio abbonamentoEmessoFromDB = titoloDiViaggioDAO.findById(abbonamentoEmesso.getId().toString());
                 System.out.println("Scegli tra le seguenti opzioni:");
                 System.out.println("1. Valida Abbonamento");
@@ -673,6 +816,9 @@ public class Service {
                         case 1:
                             List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
                             validazioneDAO.vidimazioneAbbonamento((Abbonamento) abbonamentoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                            System.out.println();
+                            System.out.println("Abbonamento validato con successo");
+                            System.out.println();
                             break;
                         case 2:
                             return;
@@ -691,6 +837,9 @@ public class Service {
             if (scelta3 == 1) {
                 Abbonamento abbonamentoEmesso = puntoVenditaDAO.emettiAbbonamento(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())), utenteFromDB, TipoAbbonamento.MENSILE);
                 titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
+                System.out.println();
+                System.out.println("Abbonamento Mensile emesso con successo");
+                System.out.println();
                 TitoloDiViaggio abbonamentoEmessoFromDB = titoloDiViaggioDAO.findById(abbonamentoEmesso.getId().toString());
                 System.out.println("Scegli tra le seguenti opzioni:");
                 System.out.println("1. Valida Abbonamento");
@@ -701,6 +850,9 @@ public class Service {
                         case 1:
                             List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
                             validazioneDAO.vidimazioneAbbonamento((Abbonamento) abbonamentoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                            System.out.println();
+                            System.out.println("Abbonamento validato con successo");
+                            System.out.println();
                             break;
                         case 2:
                             return;
@@ -711,6 +863,9 @@ public class Service {
             } else if (scelta3 == 2) {
                 Abbonamento abbonamentoEmesso = puntoVenditaDAO.emettiAbbonamento(listaRivenditoriFromDB.get(rand.nextInt(listaRivenditoriFromDB.size())), utenteFromDB, TipoAbbonamento.SETTIMANALE);
                 titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
+                System.out.println();
+                System.out.println("Abbonamento Settimanale emesso con successo");
+                System.out.println();
                 TitoloDiViaggio abbonamentoEmessoFromDB = titoloDiViaggioDAO.findById(abbonamentoEmesso.getId().toString());
                 System.out.println("Scegli tra le seguenti opzioni:");
                 System.out.println("1. Valida Abbonamento");
@@ -721,6 +876,9 @@ public class Service {
                         case 1:
                             List<Mezzo> mezziFromDB = mezzoDAO.findAll().stream().filter(Mezzo::isInServizio).toList();
                             validazioneDAO.vidimazioneAbbonamento((Abbonamento) abbonamentoEmessoFromDB, mezziFromDB.get(rand.nextInt(mezziFromDB.size())));
+                            System.out.println();
+                            System.out.println("Abbonamento validato con successo");
+                            System.out.println();
                             break;
                         case 2:
                             return;
@@ -739,6 +897,9 @@ public class Service {
         String cognome = sc.nextLine();
         Utente nuovoUtente = new Utente(nome, cognome);
         utenteDAO.aggiungiUtente(nuovoUtente);
+        System.out.println();
+        System.out.println("Benvenuto " + nuovoUtente.getNome() + " " + nuovoUtente.getCognome());
+        System.out.println();
         Utente utenteFromDB = utenteDAO.findById(nuovoUtente.getId().toString());
         while (true) {
             System.out.println("Scegli un opzione:");
@@ -801,7 +962,6 @@ public class Service {
     }
 
     public void validaBiglietto() {
-        //TODO
 
         Random rand = new Random();
 
@@ -812,18 +972,32 @@ public class Service {
         }
 
         Mezzo mezzoCasualeFromDB = mezziInServizio.get(rand.nextInt(mezziInServizio.size()));
-        System.out.println("Inserisci l'ID del tuo biglietto per validarlo:");
-        String idBiglietto = sc.nextLine();
-        Biglietto bigliettoFromDB = (Biglietto) titoloDiViaggioDAO.findById(idBiglietto);
+        Biglietto bigliettoFromDB = null;
+        try {
+            System.out.println("Inserisci l'ID del tuo biglietto per validarlo:");
+            String idBiglietto = sc.nextLine();
+            bigliettoFromDB = (Biglietto) titoloDiViaggioDAO.findById(idBiglietto);
+        } catch (Exception e) {
+            System.out.println();
+            System.out.println("Biglietto non trovato");
+            System.out.println();
+            return;
+        }
         if (bigliettoFromDB.isValido()) {
             try {
                 validazioneDAO.vidimazioneBiglietto(bigliettoFromDB, mezzoCasualeFromDB);
+                System.out.println();
                 System.out.println("Biglietto valido, Buon Viaggio!");
+                System.out.println();
             } catch (Exception e) {
-                System.out.println("Scelta non valida");
+                System.out.println();
+                System.out.println("Validazione non riuscita");
+                System.out.println();
             }
         } else {
+            System.out.println();
             System.out.println("Biglietto non valido");
+            System.out.println();
         }
 
 
@@ -839,18 +1013,33 @@ public class Service {
         }
 
         Mezzo mezzoCasualeFromDB = mezziInServizio.get(rand.nextInt(mezziInServizio.size()));
-        System.out.println("Inserisci l'ID del tuo abbonamento per validarlo:");
-        String idAbbonamento = sc.nextLine();
-        Abbonamento abbonamentoFromDB = (Abbonamento) titoloDiViaggioDAO.findById(idAbbonamento);
+        Abbonamento abbonamentoFromDB;
+        try {
+            System.out.println("Inserisci l'ID del tuo abbonamento per validarlo:");
+            String idAbbonamento = sc.nextLine();
+            abbonamentoFromDB = (Abbonamento) titoloDiViaggioDAO.findById(idAbbonamento);
+        } catch (Exception e) {
+            System.out.println();
+            System.out.println("Abbonamento non trovato");
+            System.out.println();
+            return;
+        }
+
         if (abbonamentoFromDB.dataScadenzaAbbonamento().isAfter(LocalDate.now())) {
             try {
                 validazioneDAO.vidimazioneAbbonamento(abbonamentoFromDB, mezzoCasualeFromDB);
+                System.out.println();
                 System.out.println("Abbonamento valido, Buon Viaggio!");
+                System.out.println();
             } catch (Exception e) {
-                System.out.println("Scelta non valida");
+                System.out.println();
+                System.out.println("Validazione non riuscita");
+                System.out.println();
             }
         } else {
+            System.out.println();
             System.out.println("Abbonamento non valido");
+            System.out.println();
         }
 
     }

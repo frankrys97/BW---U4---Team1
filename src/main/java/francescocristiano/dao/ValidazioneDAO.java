@@ -41,7 +41,6 @@ public class ValidazioneDAO {
         ValidazioneBiglietto validazioneBiglietto = new ValidazioneBiglietto(mezzo, LocalDate.now(), biglietto);
         em.persist(validazioneBiglietto);
         transaction.commit();
-        System.out.println("Biglietto validato con successo");
     }
 
     public void vidimazioneAbbonamento(Abbonamento abbonamento, Mezzo mezzo) {
@@ -52,7 +51,6 @@ public class ValidazioneDAO {
         em.persist(validazioneAbbonamento);
 
         transaction.commit();
-        System.out.println("Abbonamento validato con successo");
     }
 
     public long conteggioTitoliDiViaggioValidatiPerUnMezzo(Mezzo mezzo) {

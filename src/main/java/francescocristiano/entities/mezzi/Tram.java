@@ -16,6 +16,6 @@ public class Tram extends Mezzo {
 
     @Override
     public String toString() {
-        return "Tram{" + super.toString() + "}";
+        return "Tram: " + super.toString();
     }
 }

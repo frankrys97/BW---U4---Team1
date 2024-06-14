@@ -57,11 +57,10 @@ public class Utente {
 
     @Override
     public String toString() {
-        return "Utente{" +
+        return "Utente: " +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
-                ", numeroTessera=" + numeroTessera +
-                '}';
+                ", numeroTessera=" + numeroTessera;
     }
 }
