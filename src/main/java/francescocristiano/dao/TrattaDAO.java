@@ -21,7 +21,6 @@ public class TrattaDAO {
         transaction.begin();
         em.persist(tratta);
         transaction.commit();
-        System.out.println("La tratta da " + tratta.getZonaPartenza() + " a " + tratta.getCapolinea() + " è salvata con successo nel database!");
     }
 
     public Tratta findById(String id) {

@@ -19,7 +19,6 @@ public class PeriodoServizioManutenzioneDAO {
         transaction.begin();
         em.persist(periodoServizioManutenzione);
         transaction.commit();
-        System.out.println("Periodo di servizio/manutenzione del mezzo salvato con successo nel database!");
     }
 
     public List<PeriodoServizioManutenzione> trovaPeriodoServizioManutenzioneMezzo(Mezzo mezzo) {

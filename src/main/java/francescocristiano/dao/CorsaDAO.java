@@ -21,8 +21,6 @@ public class CorsaDAO {
         transaction.begin();
         em.persist(corsa);
         transaction.commit();
-
-        System.out.println("Corsa salvata con successo nel database!");
     }
 
     public Duration calcolaTempioMedioPercorrenza(Tratta tratta) {

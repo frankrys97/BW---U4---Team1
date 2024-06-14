@@ -20,7 +20,6 @@ public class UtenteDAO {
         transaction.begin();
         em.persist(utente);
         transaction.commit();
-        System.out.println("L'utente " + utente.getNome() + ", " + utente.getCognome() + " salvato con successo nel database!");
     }
 
     public Utente findById(String id) {

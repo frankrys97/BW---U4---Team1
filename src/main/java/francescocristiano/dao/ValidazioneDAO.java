@@ -25,7 +25,6 @@ public class ValidazioneDAO {
         transaction.begin();
         em.persist(validazione);
         transaction.commit();
-        System.out.println("Validazione salvata con successo nel database!");
     }
 
     public Validazione findById(String id) {

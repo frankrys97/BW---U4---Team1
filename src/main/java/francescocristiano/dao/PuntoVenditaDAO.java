@@ -33,7 +33,6 @@ public class PuntoVenditaDAO {
         transaction.begin();
         em.persist(puntoVendita);
         transaction.commit();
-        System.out.println("Punto Vendita salvato con successo");
     }
 
     public PuntoVendita findById(String id) {
@@ -56,7 +55,7 @@ public class PuntoVenditaDAO {
         }
 
         Biglietto bigliettoEmesso = new Biglietto(LocalDate.now(), puntoVendita);
-       return bigliettoEmesso;
+        return bigliettoEmesso;
     }
 
     public Abbonamento emettiAbbonamento(PuntoVendita puntoVendita, Utente utente, TipoAbbonamento tipoAbbonamento) throws Exception {

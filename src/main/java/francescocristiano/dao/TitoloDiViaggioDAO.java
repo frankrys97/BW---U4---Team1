@@ -27,7 +27,6 @@ public class TitoloDiViaggioDAO {
         transaction.begin();
         em.persist(titoloDiViaggio);
         transaction.commit();
-        System.out.println("Titolo di viaggio salvato con successo nel database!");
     }
 
     public void aggiornaTitoloDiViaggio(TitoloDiViaggio titoloDiViaggio) {

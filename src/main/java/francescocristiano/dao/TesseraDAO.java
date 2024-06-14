@@ -23,7 +23,6 @@ public class TesseraDAO {
         em.persist(tessera);
         em.merge(utente);
         transaction.commit();
-        System.out.println("Tessera di " + tessera.getUtente().getNome() + ", " + tessera.getUtente().getCognome() + " salvata con successo nel database!");
     }
 
     public Tessera findById(String id) {
