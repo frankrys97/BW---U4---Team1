@@ -385,32 +385,7 @@ public class Service {
                         trattaDAO.aggiungiTratta(new Tratta(zonaPartenza, zonaArrivo));
                         break;
                     case 4: //Aggiungi corsa
-                        System.out.println("Inserisci l'ID del mezzo relativo alla corsa:");
-                        String idMezzo = sc.nextLine();
-                        System.out.println("Inserisci l'ID della tratta relativa alla corsa:");
-                        String idTratta = sc.nextLine();
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-                        try {
-                            System.out.println("Inserisci la partenza della corsa (yyyy-MM-dd HH:mm): ");
-                            String dataPartenza = sc.nextLine();
-                            LocalDateTime inizioCorsa = LocalDateTime.parse(dataPartenza, formatter);
-
-                            System.out.println("Inserisci la fine della corsa (yyyy-MM-dd HH:mm): ");
-                            String dataFine = sc.nextLine();
-                            LocalDateTime fineCorsa = LocalDateTime.parse(dataFine, formatter);
-
-                            Mezzo mezzoTrovato = mezzoDAO.findById(idMezzo);
-                            Tratta trattaTrovata = trattaDAO.findById(idTratta);
-                            corsaDAO.aggiungiCorsa(new Corsa(inizioCorsa, fineCorsa, trattaTrovata, mezzoTrovato));
-                    /*        if (mezzoTrovato != null && trattaTrovata != null) {
-                                System.out.println("Corsa aggiunta con successo!");
-                            } else {
-                                System.out.println("Mezzo o Tratta non trovati");
-                            }*/
-                        } catch (DateTimeParseException e) {
-                            System.out.println("Formato della data non valido. Riprova.");
-                        }
+                        aggiungiCorsa();
                         break;
                    /* case 5:
                         System.out.println("Inserisci l'id del mezzo a cui assegnare la tratta:");
@@ -429,6 +404,53 @@ public class Service {
             }
 
 
+        }
+    }
+
+    public void aggiungiCorsa() {
+        Mezzo mezzoTrovato = null;
+        Tratta trattaTrovata = null;
+        try {
+            System.out.println("Inserisci l'ID del mezzo relativo alla corsa:");
+            String idMezzo = sc.nextLine();
+            mezzoTrovato = mezzoDAO.findById(idMezzo);
+        } catch (Exception e) {
+            System.out.println("Mezzo non trovato");
+            return;
+        }
+
+        try {
+            System.out.println("Inserisci l'ID della tratta relativa alla corsa:");
+            String idTratta = sc.nextLine();
+            trattaTrovata = trattaDAO.findById(idTratta);
+        } catch (Exception e) {
+            System.out.println("Tratta non trovata");
+            return;
+
+        }
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+            System.out.println("Inserisci la partenza della corsa (yyyy-MM-dd HH:mm): ");
+            String dataPartenza = sc.nextLine();
+            LocalDateTime inizioCorsa = LocalDateTime.parse(dataPartenza, formatter);
+
+            System.out.println("Inserisci la fine della corsa (yyyy-MM-dd HH:mm): ");
+            String dataFine = sc.nextLine();
+            LocalDateTime fineCorsa = LocalDateTime.parse(dataFine, formatter);
+
+
+            corsaDAO.aggiungiCorsa(new Corsa(inizioCorsa, fineCorsa, trattaTrovata, mezzoTrovato));
+
+
+                    /*        if (mezzoTrovato != null && trattaTrovata != null) {
+                                System.out.println("Corsa aggiunta con successo!");
+                            } else {
+                                System.out.println("Mezzo o Tratta non trovati");
+                            }*/
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato della data non valido. Riprova.");
         }
     }
 
