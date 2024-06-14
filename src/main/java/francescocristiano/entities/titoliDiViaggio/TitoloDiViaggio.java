@@ -18,7 +18,8 @@ public abstract class TitoloDiViaggio {
     @JoinColumn(name = "punto_vendita_id")
     private PuntoVendita puntoVendita;
 
-    public TitoloDiViaggio(){}
+    public TitoloDiViaggio() {
+    }
 
     public TitoloDiViaggio(LocalDate dataEmissione, PuntoVendita puntoVendita) {
         this.dataEmissione = dataEmissione;
@@ -43,5 +44,13 @@ public abstract class TitoloDiViaggio {
 
     public void setPuntoVendita(PuntoVendita puntoVendita) {
         this.puntoVendita = puntoVendita;
+    }
+
+    @Override
+    public String toString() {
+        return "TitoloDiViaggio{" +
+                "id=" + id +
+                ", dataEmissione=" + dataEmissione +
+                '}';
     }
 }
