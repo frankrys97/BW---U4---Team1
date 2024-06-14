@@ -442,7 +442,7 @@ public class Service {
 
 
             corsaDAO.aggiungiCorsa(new Corsa(inizioCorsa, fineCorsa, trattaTrovata, mezzoTrovato));
-
+            System.out.println("Corsa aggiunta con successo");
 
                     /*        if (mezzoTrovato != null && trattaTrovata != null) {
                                 System.out.println("Corsa aggiunta con successo!");
