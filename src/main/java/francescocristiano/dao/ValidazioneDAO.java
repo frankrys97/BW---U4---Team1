@@ -56,5 +56,9 @@ public class ValidazioneDAO {
         System.out.println("Abbonamento validato con successo");
     }
 
+    public long conteggioTitoliDiViaggioValidatiPerUnMezzo(Mezzo mezzo) {
+        return em.createQuery("SELECT COUNT(v) FROM Validazione v WHERE v.mezzo = :mezzo", Long.class).setParameter("mezzo", mezzo).getSingleResult();
+    }
+
 
 }

@@ -22,17 +22,18 @@ public class Abbonamento extends TitoloDiViaggio {
     @OneToMany(mappedBy = "abbonamento")
     private List<ValidazioneAbbonamento> validazioniAbbonamenti;
 
-    public Abbonamento(){}
+    public Abbonamento() {
+    }
 
     public Abbonamento(LocalDate dataEmissione, PuntoVendita puntoVendita, TipoAbbonamento tipoAbbonamento, Tessera tessera) {
         super(dataEmissione, puntoVendita);
-        this.dataScadenza = dataScadenzaAbbonamento();
         this.tipoAbbonamento = tipoAbbonamento;
+        this.dataScadenza = dataScadenzaAbbonamento();
         this.tessera = tessera;
     }
 
-    public LocalDate dataScadenzaAbbonamento(){
-        if(this.tipoAbbonamento.equals(TipoAbbonamento.SETTIMANALE)){
+    public LocalDate dataScadenzaAbbonamento() {
+        if (this.tipoAbbonamento.equals(TipoAbbonamento.SETTIMANALE)) {
             return this.getDataEmissione().plusDays(7);
         } else {
             return this.getDataEmissione().plusMonths(1);

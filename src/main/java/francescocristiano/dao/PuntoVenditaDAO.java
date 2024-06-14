@@ -42,7 +42,7 @@ public class PuntoVenditaDAO {
         return puntoVendita;
     }
 
-    public void emettiBiglietto(PuntoVendita puntoVendita) throws Exception {
+    public Biglietto emettiBiglietto(PuntoVendita puntoVendita) throws Exception {
         if (puntoVendita instanceof Rivenditore rivenditore) {
             if (!rivenditore.isLicenza()) {
                 throw new Exception("Il rivenditore non è in possesso di licenza");
@@ -56,11 +56,10 @@ public class PuntoVenditaDAO {
         }
 
         Biglietto bigliettoEmesso = new Biglietto(LocalDate.now(), puntoVendita);
-        titoloDiViaggioDAO.aggiungiTitoloDiViaggio(bigliettoEmesso);
-        System.out.println("Biglietto emesso con successo");
+       return bigliettoEmesso;
     }
 
-    public void emettiAbbonamento(PuntoVendita puntoVendita, Utente utente, TipoAbbonamento tipoAbbonamento) throws Exception {
+    public Abbonamento emettiAbbonamento(PuntoVendita puntoVendita, Utente utente, TipoAbbonamento tipoAbbonamento) throws Exception {
         Tessera tessera = utente.getNumeroTessera();
         if (tessera == null) {
             throw new Exception("L'utente non possiede una tessera per l'abbonamento");
@@ -81,12 +80,15 @@ public class PuntoVenditaDAO {
         }
 
         Abbonamento abbonamentoEmesso = new Abbonamento(LocalDate.now(), puntoVendita, tipoAbbonamento, tessera);
-        titoloDiViaggioDAO.aggiungiTitoloDiViaggio(abbonamentoEmesso);
-        System.out.println("Abbbonamento emesso con successo");
+        return abbonamentoEmesso;
     }
 
     public long conteggioTitoliDiViaggioEmessiPerPuntoVendita(PuntoVendita puntoVendita) {
         return em.createQuery("SELECT COUNT(t) FROM TitoloDiViaggio t WHERE t.puntoVendita = :puntoVendita", Long.class).setParameter("puntoVendita", puntoVendita).getSingleResult();
+    }
+
+    public List<PuntoVendita> findAll() {
+        return em.createQuery("SELECT p FROM PuntoVendita p", PuntoVendita.class).getResultList();
     }
 
   /*  public long conteggioTitoliDiViaggioEmessiPerPuntoVendita(String id) {

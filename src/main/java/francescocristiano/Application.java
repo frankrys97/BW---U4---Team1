@@ -1,6 +1,9 @@
 package francescocristiano;
 
+/*
 import francescocristiano.dao.TrattaDAO;
+*/
+
 import francescocristiano.entities.service.Service;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -12,9 +15,9 @@ public class Application {
 
     public static void main(String[] args) {
         EntityManager em = emf.createEntityManager();
-        TrattaDAO trattaDAO = new TrattaDAO(em);
+        /*TrattaDAO trattaDAO = new TrattaDAO(em);*/
         Service service = new Service(em);
-        service.inizializzaDataBase();
+        service.startApp();
 
         /*Tratta trattaTrovata = trattaDAO.findById("7e2ed687-8026-49b8-8ed5-ca08d80d5e53");
 

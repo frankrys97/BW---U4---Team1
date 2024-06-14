@@ -71,4 +71,13 @@ public class Tessera {
     public void setAbbonamenti(List<Abbonamento> abbonamenti) {
         this.abbonamenti = abbonamenti;
     }
+
+    @Override
+    public String toString() {
+        return "Tessera{" +
+                "id=" + id +
+                ", dataEmissione=" + dataEmissione +
+                ", dataScadenza=" + dataScadenza +
+                '}';
+    }
 }

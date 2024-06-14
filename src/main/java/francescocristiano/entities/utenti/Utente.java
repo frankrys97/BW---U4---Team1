@@ -54,4 +54,14 @@ public class Utente {
     public void setNumeroTessera(Tessera numeroTessera) {
         this.numeroTessera = numeroTessera;
     }
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", numeroTessera=" + numeroTessera +
+                '}';
+    }
 }
