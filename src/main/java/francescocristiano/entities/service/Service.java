@@ -862,6 +862,7 @@ public class Service {
                         rinnovaAbbonamentoGenerico(utenteFromDB);
                         break;
                     case 3:
+                        return;
                 }
             } catch (Exception e) {
                 System.out.println("Scelta non valida");
@@ -941,12 +942,12 @@ public class Service {
             for (int i = 0; i < abbonamenti.size(); i++) {
                 System.out.println((i + 1) + ". " + abbonamenti.get(i));
             }
-            int scelta = Integer.parseInt(sc.nextLine());
-            if (scelta < 1 || scelta > abbonamenti.size()) {
+            int sceltaAbbonamento = Integer.parseInt(sc.nextLine());
+            if (sceltaAbbonamento < 1 || sceltaAbbonamento > abbonamenti.size()) {
                 System.out.println("Scelta non valida.");
                 return;
             }
-            Abbonamento abbonamento = abbonamenti.get(scelta - 1);
+            Abbonamento abbonamento = abbonamenti.get(sceltaAbbonamento - 1);
 
             rinnovaAbbonamento(abbonamento);
         } else {
