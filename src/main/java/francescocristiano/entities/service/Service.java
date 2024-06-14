@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
@@ -388,17 +389,27 @@ public class Service {
                         String idMezzo = sc.nextLine();
                         System.out.println("Inserisci l'ID della tratta relativa alla corsa:");
                         String idTratta = sc.nextLine();
-                        System.out.println("Inserisci la partenza della corsa (yyyy-MM-dd HH:mm:): ");
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:");
-                        LocalDateTime inizioCorsa = LocalDateTime.parse(sc.nextLine(), formatter);
-                        System.out.println("Inserisci la fine della corsa (yyyy-MM-dd HH:mm:): ");
-                        LocalDateTime fineCorsa = LocalDateTime.parse(sc.nextLine(), formatter);
-                        Mezzo mezzoTrovato = mezzoDAO.findById(idMezzo);
-                        Tratta trattaTrovata = trattaDAO.findById(idTratta);
-                        if (mezzoTrovato != null && trattaTrovata != null) {
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+                        try {
+                            System.out.println("Inserisci la partenza della corsa (yyyy-MM-dd HH:mm): ");
+                            String dataPartenza = sc.nextLine();
+                            LocalDateTime inizioCorsa = LocalDateTime.parse(dataPartenza, formatter);
+
+                            System.out.println("Inserisci la fine della corsa (yyyy-MM-dd HH:mm): ");
+                            String dataFine = sc.nextLine();
+                            LocalDateTime fineCorsa = LocalDateTime.parse(dataFine, formatter);
+
+                            Mezzo mezzoTrovato = mezzoDAO.findById(idMezzo);
+                            Tratta trattaTrovata = trattaDAO.findById(idTratta);
                             corsaDAO.aggiungiCorsa(new Corsa(inizioCorsa, fineCorsa, trattaTrovata, mezzoTrovato));
-                        } else {
-                            System.out.println("Mezzo o Tratta non trovati");
+                    /*        if (mezzoTrovato != null && trattaTrovata != null) {
+                                System.out.println("Corsa aggiunta con successo!");
+                            } else {
+                                System.out.println("Mezzo o Tratta non trovati");
+                            }*/
+                        } catch (DateTimeParseException e) {
+                            System.out.println("Formato della data non valido. Riprova.");
                         }
                         break;
                    /* case 5:

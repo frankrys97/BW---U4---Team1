@@ -23,7 +23,6 @@ public class MezzoDAO {
         transaction.begin();
         em.persist(mezzo);
         transaction.commit();
-        System.out.println("Mezzo salvato con successo nel database!");
     }
 
     public Mezzo findById(String id) {
